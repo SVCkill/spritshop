@@ -305,6 +305,19 @@ try {
     if (local) savedImages = JSON.parse(local);
 } catch(e) {}
 
+// Extract pre-rendered img URLs from HTML on initial page load
+const htmlImageMap = {};
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#products-grid .sprit-card').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        const imgEl = card.querySelector('img');
+        if (titleEl && imgEl && imgEl.src) {
+            const name = titleEl.textContent.trim();
+            htmlImageMap[name] = imgEl.src;
+        }
+    });
+});
+
 const products = rawSpriteList.map((item, index) => {
     let variant = 'standard';
     if (item.name.includes('Gold')) variant = 'gold';
@@ -315,7 +328,9 @@ const products = rawSpriteList.map((item, index) => {
     else if (item.name.includes('Quack')) variant = 'quack';
 
     const calculatedPLN = calculatePrice(item);
-    const customImg = savedImages[item.name] || null;
+    
+    // Priority: 1. saved in localStorage, 2. pre-rendered in HTML, 3. null
+    const customImg = savedImages[item.name] || htmlImageMap[item.name] || null;
 
     return {
         id: index + 1,
@@ -379,8 +394,9 @@ const successOrderId = document.getElementById('success-order-id');
 
 // Dynamic SVG Avatar or Image Graphic Generator
 function generateSpriteGraphic(product) {
-    if (product.imgUrl && product.imgUrl.trim() !== '') {
-        return `<img src="${product.imgUrl}" alt="${product.name}" class="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110">`;
+    const activeUrl = product.imgUrl || savedImages[product.name] || htmlImageMap[product.name];
+    if (activeUrl && activeUrl.trim() !== '') {
+        return `<img src="${activeUrl}" alt="${product.name}" class="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110">`;
     }
 
     let bgGradient = 'linear-gradient(135deg, #1e293b, #0f172a)';
@@ -577,7 +593,7 @@ document.querySelectorAll('.rarity-filter').forEach(btn => {
 function openModal(product) {
     selectedProductModal = product;
     if (modalImgContainer) modalImgContainer.innerHTML = generateSpriteGraphic(product);
-    if (modalImgUrlInput) modalImgUrlInput.value = product.imgUrl || '';
+    if (modalImgUrlInput) modalImgUrlInput.value = product.imgUrl || savedImages[product.name] || htmlImageMap[product.name] || '';
     if (modalTitle) modalTitle.textContent = product.name;
     if (modalChance) modalChance.textContent = product.chance;
     const statusText = product.status === 'Owned' ? translations[currentLang].owned : translations[currentLang].notOwned;
@@ -828,13 +844,42 @@ if (canvas) {
     animate();
 }
 
-// Init Language
-const langBtn = document.getElementById('lang-toggle-btn');
-if (langBtn) {
-    langBtn.addEventListener('click', () => {
-        const nextLang = currentLang === 'pl' ? 'en' : 'pl';
-        setLanguage(nextLang);
+// Init Language & Bind Existing DOM Cards
+document.addEventListener('DOMContentLoaded', () => {
+    // Collect any <img> links present in the rendered HTML cards
+    document.querySelectorAll('#products-grid .sprit-card').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        const imgEl = card.querySelector('img');
+        if (titleEl && imgEl && imgEl.src) {
+            const name = titleEl.textContent.trim();
+            htmlImageMap[name] = imgEl.src;
+            const p = products.find(prod => prod.name === name);
+            if (p) p.imgUrl = imgEl.src;
+        }
     });
-}
 
-setLanguage('pl');
+    const langBtn = document.getElementById('lang-toggle-btn');
+    if (langBtn) {
+        langBtn.addEventListener('click', () => {
+            const nextLang = currentLang === 'pl' ? 'en' : 'pl';
+            setLanguage(nextLang);
+        });
+    }
+
+    setLanguage('pl');
+});
+
+// Run immediate fallback setup if DOM is already loaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    document.querySelectorAll('#products-grid .sprit-card').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        const imgEl = card.querySelector('img');
+        if (titleEl && imgEl && imgEl.src) {
+            const name = titleEl.textContent.trim();
+            htmlImageMap[name] = imgEl.src;
+            const p = products.find(prod => prod.name === name);
+            if (p) p.imgUrl = imgEl.src;
+        }
+    });
+    setLanguage('pl');
+}
