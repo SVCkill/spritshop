@@ -1,13 +1,8 @@
-// =========================================================================
-// 🖼️ PASTE YOUR IMAGE LINKS HERE / WKLEJ LINKI DO OBRAZKÓW TUTAJ:
-// 
-// Wpisz nazwę duszka i link do pliku/zdjęcia (np. "https://twoja-strona.pl/foto.jpg" lub "fn_skin.jpg")
-// Jeśli pole jest puste (""), sklep automatycznie wygeneruje unikalną grafikę SVG!
-// =========================================================================
+// ==========================================
+// SPRITSHOP — APP LOGIC (108 DUSZKÓW)
+// ==========================================
 
-
-
-// Translations
+// Translations (PL / EN)
 const translations = {
     pl: {
         tagline: "EKSKLUZYWNY VAULT DUSZKÓW",
@@ -16,10 +11,10 @@ const translations = {
         heroBadge: "108 DUSZKÓW — ŁATWY EDYTOR ZDJĘĆ",
         heroTitlePart1: "WYBIERZ",
         heroTitlePart2: "EKSKLUZYWNE DUSZKI",
-        heroDesc: "Kliknij w dowolnego duszka, aby wkleić własny link do zdjęcia! Linki możesz również wklejać bezpośrednio w pliku app.js.",
+        heroDesc: "Kliknij w dowolnego duszka, aby wkleić własny link do zdjęcia! Twoje zmiany zapisują się automatycznie.",
         browseBtn: "PRZEGLĄDAJ KATALOG (108)",
         statTitle: "Unikalnych Duszków",
-        statDesc: "Wklejaj linki do obrazków bezpośrednio w sklepie lub pliku JS!",
+        statDesc: "Wklejaj linki do obrazków bezpośrednio w oknie podglądu!",
         filterAll: "Wszystkie Duszki (108)",
         rarityLabel: "Rzadkość:",
         rarityAll: "Wszystkie",
@@ -80,10 +75,10 @@ const translations = {
         heroBadge: "108 SPRITES — EASY IMAGE EDITOR",
         heroTitlePart1: "CHOOSE",
         heroTitlePart2: "EXCLUSIVE SPRITES",
-        heroDesc: "Click on any sprite to paste your custom image URL! You can also paste URLs directly in app.js.",
+        heroDesc: "Click on any sprite to paste your custom image URL! Your changes are saved automatically.",
         browseBtn: "BROWSE CATALOG (108)",
         statTitle: "Unique Sprites",
-        statDesc: "Paste image links directly in shop or in JS file!",
+        statDesc: "Paste image links directly in the preview modal!",
         filterAll: "All Sprites (108)",
         rarityLabel: "Rarity:",
         rarityAll: "All",
@@ -143,8 +138,10 @@ let currentLang = 'pl';
 
 function setLanguage(lang) {
     currentLang = lang;
-    document.getElementById('current-lang-flag').textContent = lang === 'pl' ? '🇵🇱' : '🇬🇧';
-    document.getElementById('current-lang-code').textContent = lang.toUpperCase();
+    const flagEl = document.getElementById('current-lang-flag');
+    const codeEl = document.getElementById('current-lang-code');
+    if (flagEl) flagEl.textContent = lang === 'pl' ? '🇵🇱' : '🇬🇧';
+    if (codeEl) codeEl.textContent = lang.toUpperCase();
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -163,7 +160,7 @@ function setLanguage(lang) {
     filterProducts();
 }
 
-// Raw Sprite List
+// Raw Sprite Catalog (108 items)
 const rawSpriteList = [
     { name: "John Wick Sprite", base: "John Wick", rarity: "mythic", chance: "0%", status: "Not owned" },
     { name: "Batman Sprite", base: "Batman", rarity: "mythic", chance: "1.44%", status: "Not owned" },
@@ -318,9 +315,7 @@ const products = rawSpriteList.map((item, index) => {
     else if (item.name.includes('Quack')) variant = 'quack';
 
     const calculatedPLN = calculatePrice(item);
-    
-    // Priority: 1. saved in localStorage, 2. customImageMap in code, 3. null
-    const customImg = savedImages[item.name] || customImageMap[item.name] || null;
+    const customImg = savedImages[item.name] || null;
 
     return {
         id: index + 1,
@@ -436,28 +431,29 @@ function generateSpriteGraphic(product) {
 }
 
 // Save Custom Image URL for selected product
-saveImgUrlBtn.addEventListener('click', () => {
-    if (!selectedProductModal) return;
-    const url = modalImgUrlInput.value.trim();
-    selectedProductModal.imgUrl = url.length > 0 ? url : null;
-    
-    // Save to localStorage
-    savedImages[selectedProductModal.name] = selectedProductModal.imgUrl;
-    try {
-        localStorage.setItem('spritshop_custom_images', JSON.stringify(savedImages));
-    } catch(e) {}
+if (saveImgUrlBtn) {
+    saveImgUrlBtn.addEventListener('click', () => {
+        if (!selectedProductModal) return;
+        const url = modalImgUrlInput.value.trim();
+        selectedProductModal.imgUrl = url.length > 0 ? url : null;
+        
+        savedImages[selectedProductModal.name] = selectedProductModal.imgUrl;
+        try {
+            localStorage.setItem('spritshop_custom_images', JSON.stringify(savedImages));
+        } catch(e) {}
 
-    // Update modal view and re-render grid
-    modalImgContainer.innerHTML = generateSpriteGraphic(selectedProductModal);
-    filterProducts();
-    showToast(currentLang === 'pl' ? `Zapisano obrazek dla "${selectedProductModal.name}"!` : `Image saved for "${selectedProductModal.name}"!`);
-});
+        modalImgContainer.innerHTML = generateSpriteGraphic(selectedProductModal);
+        filterProducts();
+        showToast(currentLang === 'pl' ? `Zapisano obrazek dla "${selectedProductModal.name}"!` : `Image saved for "${selectedProductModal.name}"!`);
+    });
+}
 
 // Render Products Grid
 function renderProducts(items) {
+    if (!productsGrid) return;
     productsGrid.innerHTML = '';
     const foundText = translations[currentLang].foundCount.replace('{count}', items.length);
-    resultsCount.textContent = foundText;
+    if (resultsCount) resultsCount.textContent = foundText;
 
     if (items.length === 0) {
         productsGrid.innerHTML = `
@@ -545,15 +541,19 @@ function filterProducts() {
     renderProducts(filtered);
 }
 
-shopSearch.addEventListener('input', (e) => {
-    searchQuery = e.target.value.toLowerCase().trim();
-    filterProducts();
-});
+if (shopSearch) {
+    shopSearch.addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        filterProducts();
+    });
+}
 
-priceSort.addEventListener('change', (e) => {
-    currentSort = e.target.value;
-    filterProducts();
-});
+if (priceSort) {
+    priceSort.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        filterProducts();
+    });
+}
 
 document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -576,30 +576,34 @@ document.querySelectorAll('.rarity-filter').forEach(btn => {
 // Modal Preview & Image Editor
 function openModal(product) {
     selectedProductModal = product;
-    modalImgContainer.innerHTML = generateSpriteGraphic(product);
-    modalImgUrlInput.value = product.imgUrl || '';
-    modalTitle.textContent = product.name;
-    modalChance.textContent = product.chance;
+    if (modalImgContainer) modalImgContainer.innerHTML = generateSpriteGraphic(product);
+    if (modalImgUrlInput) modalImgUrlInput.value = product.imgUrl || '';
+    if (modalTitle) modalTitle.textContent = product.name;
+    if (modalChance) modalChance.textContent = product.chance;
     const statusText = product.status === 'Owned' ? translations[currentLang].owned : translations[currentLang].notOwned;
-    modalStatus.textContent = statusText;
-    modalPrice.textContent = `${product.pricePLN.toFixed(2)} PLN`;
+    if (modalStatus) modalStatus.textContent = statusText;
+    if (modalPrice) modalPrice.textContent = `${product.pricePLN.toFixed(2)} PLN`;
     const rarityText = translations[currentLang][`rarity${product.rarity.charAt(0).toUpperCase() + product.rarity.slice(1)}`] || product.rarity;
-    modalBadge.textContent = rarityText;
-    modalBadge.className = `px-3 py-1 rounded-full text-[10px] font-black uppercase mb-2 inline-block badge-${product.rarity}`;
-    itemModal.classList.remove('closed');
+    if (modalBadge) {
+        modalBadge.textContent = rarityText;
+        modalBadge.className = `px-3 py-1 rounded-full text-[10px] font-black uppercase mb-2 inline-block badge-${product.rarity}`;
+    }
+    if (itemModal) itemModal.classList.remove('closed');
 }
 
-closeModalBtn.addEventListener('click', () => itemModal.classList.add('closed'));
-modalAddBtn.addEventListener('click', () => {
-    if (selectedProductModal) {
-        addToCart(selectedProductModal.id);
-        itemModal.classList.add('closed');
-    }
-});
+if (closeModalBtn) closeModalBtn.addEventListener('click', () => itemModal.classList.add('closed'));
+if (modalAddBtn) {
+    modalAddBtn.addEventListener('click', () => {
+        if (selectedProductModal) {
+            addToCart(selectedProductModal.id);
+            itemModal.classList.add('closed');
+        }
+    });
+}
 
 // Cart Drawer
-cartBtn.addEventListener('click', () => cartDrawer.classList.remove('closed'));
-closeCartBtn.addEventListener('click', () => cartDrawer.classList.add('closed'));
+if (cartBtn) cartBtn.addEventListener('click', () => cartDrawer.classList.remove('closed'));
+if (closeCartBtn) closeCartBtn.addEventListener('click', () => cartDrawer.classList.add('closed'));
 
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
@@ -616,13 +620,13 @@ function removeFromCart(index) {
 }
 
 function updateCart() {
-    cartTotalItemsCount.textContent = cart.length;
-    cartItemsList.innerHTML = '';
+    if (cartTotalItemsCount) cartTotalItemsCount.textContent = cart.length;
+    if (cartItemsList) cartItemsList.innerHTML = '';
 
     let totalPLN = 0;
 
     if (cart.length === 0) {
-        cartItemsList.innerHTML = `<p class="text-slate-400 text-sm text-center py-12">${translations[currentLang].cartEmpty}</p>`;
+        if (cartItemsList) cartItemsList.innerHTML = `<p class="text-slate-400 text-sm text-center py-12">${translations[currentLang].cartEmpty}</p>`;
     } else {
         cart.forEach((item, index) => {
             totalPLN += item.pricePLN;
@@ -643,27 +647,29 @@ function updateCart() {
                 <button class="remove-item-btn text-slate-400 hover:text-red-400 text-sm px-2 py-1 transition">✕</button>
             `;
             div.querySelector('.remove-item-btn').addEventListener('click', () => removeFromCart(index));
-            cartItemsList.appendChild(div);
+            if (cartItemsList) cartItemsList.appendChild(div);
         });
     }
 
-    cartTotalBadge.textContent = `${totalPLN.toFixed(2)} PLN`;
-    cartTotalPln.textContent = `${totalPLN.toFixed(2)} PLN`;
+    if (cartTotalBadge) cartTotalBadge.textContent = `${totalPLN.toFixed(2)} PLN`;
+    if (cartTotalPln) cartTotalPln.textContent = `${totalPLN.toFixed(2)} PLN`;
 }
 
 // Checkout Modal
-checkoutBtn.addEventListener('click', () => {
-    if (cart.length === 0) {
-        showToast(currentLang === 'pl' ? 'Twój koszyk jest pusty!' : 'Your cart is empty!');
-        return;
-    }
-    cartDrawer.classList.add('closed');
-    openCheckout();
-});
+if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+        if (cart.length === 0) {
+            showToast(currentLang === 'pl' ? 'Twój koszyk jest pusty!' : 'Your cart is empty!');
+            return;
+        }
+        if (cartDrawer) cartDrawer.classList.add('closed');
+        openCheckout();
+    });
+}
 
 function openCheckout() {
-    checkoutItemsCount.textContent = `${cart.length} Sprites`;
-    checkoutItemsPreview.innerHTML = '';
+    if (checkoutItemsCount) checkoutItemsCount.textContent = `${cart.length} Sprites`;
+    if (checkoutItemsPreview) checkoutItemsPreview.innerHTML = '';
     
     let totalPLN = 0;
     cart.forEach(item => {
@@ -671,14 +677,14 @@ function openCheckout() {
         const d = document.createElement('div');
         d.className = 'flex justify-between items-center text-slate-300';
         d.innerHTML = `<span>• ${item.name}</span> <span class="text-cyan-400 font-bold">${item.pricePLN.toFixed(2)} PLN</span>`;
-        checkoutItemsPreview.appendChild(d);
+        if (checkoutItemsPreview) checkoutItemsPreview.appendChild(d);
     });
 
-    checkoutFinalPrice.textContent = `${totalPLN.toFixed(2)} PLN`;
-    checkoutModal.classList.remove('closed');
+    if (checkoutFinalPrice) checkoutFinalPrice.textContent = `${totalPLN.toFixed(2)} PLN`;
+    if (checkoutModal) checkoutModal.classList.remove('closed');
 }
 
-closeCheckoutBtn.addEventListener('click', () => checkoutModal.classList.add('closed'));
+if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', () => checkoutModal.classList.add('closed'));
 
 // Payment Selector
 document.querySelectorAll('.pay-method-btn').forEach(btn => {
@@ -735,38 +741,42 @@ function playWinSound() {
 }
 
 // Submit Payment
-submitPaymentBtn.addEventListener('click', () => {
-    submitPaymentBtn.disabled = true;
-    submitPaymentBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> ${currentLang === 'pl' ? 'PRZETWARZANIE...' : 'PROCESSING...'}`;
+if (submitPaymentBtn) {
+    submitPaymentBtn.addEventListener('click', () => {
+        submitPaymentBtn.disabled = true;
+        submitPaymentBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> ${currentLang === 'pl' ? 'PRZETWARZANIE...' : 'PROCESSING...'}`;
 
-    setTimeout(() => {
-        submitPaymentBtn.disabled = false;
-        submitPaymentBtn.innerHTML = `<i class="fa-solid fa-lock text-slate-950"></i> <span id="submit-payment-text">${translations[currentLang].submitPayment}</span>`;
-        
-        checkoutModal.classList.add('closed');
-        
-        cart.forEach(item => {
-            item.status = 'Owned';
-        });
+        setTimeout(() => {
+            submitPaymentBtn.disabled = false;
+            submitPaymentBtn.innerHTML = `<i class="fa-solid fa-lock text-slate-950"></i> <span id="submit-payment-text">${translations[currentLang].submitPayment}</span>`;
+            
+            if (checkoutModal) checkoutModal.classList.add('closed');
+            
+            cart.forEach(item => {
+                item.status = 'Owned';
+            });
 
-        const randomId = Math.floor(100000 + Math.random() * 900000);
-        successOrderId.textContent = `#SPRIT-${randomId}`;
-        successModal.classList.remove('closed');
+            const randomId = Math.floor(100000 + Math.random() * 900000);
+            if (successOrderId) successOrderId.textContent = `#SPRIT-${randomId}`;
+            if (successModal) successModal.classList.remove('closed');
 
-        playWinSound();
+            playWinSound();
 
-        cart = [];
-        updateCart();
-        filterProducts();
-    }, 1500);
-});
+            cart = [];
+            updateCart();
+            filterProducts();
+        }, 1500);
+    });
+}
 
-closeSuccessBtn.addEventListener('click', () => successModal.classList.add('closed'));
+if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', () => successModal.classList.add('closed'));
 
 // Toast Helper
 function showToast(msg) {
     const toast = document.getElementById('shop-toast');
-    document.getElementById('toast-text').textContent = msg;
+    const toastText = document.getElementById('toast-text');
+    if (!toast || !toastText) return;
+    toastText.textContent = msg;
     toast.style.opacity = '1';
     toast.style.pointerEvents = 'auto';
     setTimeout(() => {
