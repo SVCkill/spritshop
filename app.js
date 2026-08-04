@@ -31,7 +31,7 @@ const translations = {
         cartEmpty: "Twój koszyk jest pusty. Dodaj duszki ze sklepu!",
         cartItemCount: "Liczba przedmiotów:",
         deliveryMethod: "Metoda dostawy:",
-        instantDelivery: "Natychmiastowa Cyfrowa",
+        instantDelivery: "Wymiana w Fortnite (BTT Bot)",
         cartTotal: "Suma zamówienia:",
         proceedToCheckout: "PRZEJDŹ DO PŁATNOŚCI (BLIK / KARTA)",
         dropChance: "Szansa na Drop:",
@@ -52,12 +52,12 @@ const translations = {
         cardExpiry: "Ważność (MM/YY)",
         submitPayment: "POTWIERDŹ I ZAPŁAĆ (BLIK)",
         successTitle: "PŁATNOŚĆ PRZYJĘTA!",
-        successDesc: "Twoje duszki zostały natychmiastowo dodane do Twojego konta SpritShop.",
+        successDesc: "Twoje duszki są gotowe do przekazania w grze Fortnite.",
         orderIdLabel: "ID Zamówienia:",
         statusLabel: "Status:",
         statusCompleted: "ZREALIZOWANO",
-        backToShop: "WRÓĆ DO SKLEPU",
-        footerDesc: "Ekskluzywny vault z 109 DusZKAMI ze skalowanymi cenami w PLN ($5 Zero Point boost).",
+        backToShop: "SKLEP",
+        footerDesc: "Ekskluzywny vault z 109 Duszkami ze skalowanymi cenami w PLN ($5 Zero Point boost).",
         terms: "Regulamin",
         privacy: "Polityka Prywatności",
         support: "Pomoc",
@@ -94,7 +94,7 @@ const translations = {
         cartEmpty: "Your cart is empty. Add sprites from the shop!",
         cartItemCount: "Items count:",
         deliveryMethod: "Delivery method:",
-        instantDelivery: "Instant Digital",
+        instantDelivery: "Fortnite In-Game Trade",
         cartTotal: "Order Total:",
         proceedToCheckout: "PROCEED TO CHECKOUT (BLIK / CARD)",
         dropChance: "Drop Chance:",
@@ -115,11 +115,11 @@ const translations = {
         cardExpiry: "Expiry (MM/YY)",
         submitPayment: "CONFIRM & PAY (BLIK)",
         successTitle: "PAYMENT APPROVED!",
-        successDesc: "Your sprites have been added to your SpritShop account instantly.",
+        successDesc: "Your sprites are ready for transfer in Fortnite.",
         orderIdLabel: "Order ID:",
         statusLabel: "Status:",
         statusCompleted: "COMPLETED",
-        backToShop: "BACK TO SHOP",
+        backToShop: "SHOP",
         footerDesc: "Exclusive vault with 109 Sprites & scaled pricing in PLN ($5 Zero Point boost).",
         terms: "Terms of Service",
         privacy: "Privacy Policy",
@@ -158,7 +158,7 @@ function setLanguage(lang) {
     filterProducts();
 }
 
-// Complete 109 Fortnite Sprites Catalog with Direct Fortnite.GG Icons
+// Complete 109 Fortnite Sprites Catalog
 const rawSpriteList = [
     { name: "John Wick Sprite", base: "John Wick", rarity: "mythic", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_Reload_FillerGrunt_icon_L.webp" },
     { name: "Batman Sprite", base: "Batman", rarity: "mythic", chance: "1.44%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Default_L.webp" },
@@ -331,8 +331,18 @@ const products = rawSpriteList.map((item, index) => {
     };
 });
 
-// App State
+// App & Auth State
 let cart = [];
+let currentUser = null;
+let userOrders = [];
+
+try {
+    const savedUser = localStorage.getItem('spritshop_current_user');
+    if (savedUser) currentUser = JSON.parse(savedUser);
+    const savedOrders = localStorage.getItem('spritshop_user_orders');
+    if (savedOrders) userOrders = JSON.parse(savedOrders);
+} catch(e) {}
+
 let currentVariantFilter = 'all';
 let currentRarityFilter = 'all';
 let currentSort = 'default';
@@ -352,7 +362,25 @@ const cartTotalPln = document.getElementById('cart-total-pln');
 const cartTotalItemsCount = document.getElementById('cart-total-items-count');
 const checkoutBtn = document.getElementById('checkout-btn');
 
-// Modals
+// Auth DOM
+const authBtn = document.getElementById('auth-btn');
+const authBtnLabel = document.getElementById('auth-btn-label');
+const authModal = document.getElementById('auth-modal');
+const closeAuthBtn = document.getElementById('close-auth-btn');
+const tabLoginBtn = document.getElementById('tab-login-btn');
+const tabRegisterBtn = document.getElementById('tab-register-btn');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+
+// Dashboard DOM
+const dashboardModal = document.getElementById('dashboard-modal');
+const closeDashBtn = document.getElementById('close-dash-btn');
+const dashUserName = document.getElementById('dash-user-name');
+const dashUserEmail = document.getElementById('dash-user-email');
+const dashOrdersList = document.getElementById('dash-orders-list');
+const logoutBtn = document.getElementById('logout-btn');
+
+// Modals & Checkout
 const itemModal = document.getElementById('item-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const modalImgContainer = document.getElementById('modal-img-container');
@@ -364,7 +392,6 @@ const modalPrice = document.getElementById('modal-price');
 const modalAddBtn = document.getElementById('modal-add-btn');
 let selectedProductModal = null;
 
-// Checkout Modal
 const checkoutModal = document.getElementById('checkout-modal');
 const closeCheckoutBtn = document.getElementById('close-checkout-btn');
 const checkoutItemsCount = document.getElementById('checkout-items-count');
@@ -375,13 +402,168 @@ const submitPaymentText = document.getElementById('submit-payment-text');
 const successModal = document.getElementById('success-modal');
 const closeSuccessBtn = document.getElementById('close-success-btn');
 const successOrderId = document.getElementById('success-order-id');
+const successBotNick = document.getElementById('success-bot-nick');
+const copyBotNickBtn = document.getElementById('copy-bot-nick-btn');
+const openDashboardAfterSuccess = document.getElementById('open-dashboard-after-success');
+
+let currentActiveBotNick = 'SpritVault_Bot01';
 
 // Direct Image Graphic Generator
 function generateSpriteGraphic(product) {
     return `<img src="${product.imgUrl}" alt="${product.name}" class="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110" onerror="this.onerror=null; this.src='https://fortnite.gg/img/icon.jpg'">`;
 }
 
-// Render Products Grid
+// Update User UI
+function updateAuthUI() {
+    if (currentUser) {
+        if (authBtnLabel) authBtnLabel.textContent = currentUser.username.toUpperCase();
+        if (dashUserName) dashUserName.textContent = `WITAJ, ${currentUser.username.toUpperCase()}!`;
+        if (dashUserEmail) dashUserEmail.textContent = currentUser.email || `Nick Fortnite: ${currentUser.fortniteNick}`;
+    } else {
+        if (authBtnLabel) authBtnLabel.textContent = 'ZALOGUJ';
+    }
+}
+
+// Auth Event Listeners
+if (authBtn) {
+    authBtn.addEventListener('click', () => {
+        if (currentUser) {
+            openDashboard();
+        } else {
+            if (authModal) authModal.classList.remove('closed');
+        }
+    });
+}
+
+if (closeAuthBtn) closeAuthBtn.addEventListener('click', () => authModal.classList.add('closed'));
+
+if (tabLoginBtn && tabRegisterBtn) {
+    tabLoginBtn.addEventListener('click', () => {
+        tabLoginBtn.classList.add('active');
+        tabRegisterBtn.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+    });
+
+    tabRegisterBtn.addEventListener('click', () => {
+        tabRegisterBtn.classList.add('active');
+        tabLoginBtn.classList.remove('active');
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+    });
+}
+
+if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('login-input-user').value.trim();
+        currentUser = { username: username, email: `${username.toLowerCase()}@spritshop.pl`, fortniteNick: username };
+        localStorage.setItem('spritshop_current_user', JSON.stringify(currentUser));
+        updateAuthUI();
+        authModal.classList.add('closed');
+        showToast(currentLang === 'pl' ? `Zalogowano jako ${username}!` : `Logged in as ${username}!`);
+    });
+}
+
+if (registerForm) {
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fnNick = document.getElementById('reg-input-fn').value.trim();
+        const email = document.getElementById('reg-input-email').value.trim();
+        currentUser = { username: fnNick, email: email, fortniteNick: fnNick };
+        localStorage.setItem('spritshop_current_user', JSON.stringify(currentUser));
+        updateAuthUI();
+        authModal.classList.add('closed');
+        showToast(currentLang === 'pl' ? `Zarejestrowano pomyślnie! Witaj, ${fnNick}!` : `Registered successfully! Welcome, ${fnNick}!`);
+    });
+}
+
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        currentUser = null;
+        localStorage.removeItem('spritshop_current_user');
+        updateAuthUI();
+        if (dashboardModal) dashboardModal.classList.add('closed');
+        showToast(currentLang === 'pl' ? 'Wylogowano z konta.' : 'Logged out.');
+    });
+}
+
+// Dashboard Render
+function openDashboard() {
+    renderUserOrders();
+    if (dashboardModal) dashboardModal.classList.remove('closed');
+}
+
+function renderUserOrders() {
+    if (!dashOrdersList) return;
+    dashOrdersList.innerHTML = '';
+
+    if (userOrders.length === 0) {
+        dashOrdersList.innerHTML = `
+            <div class="text-center text-slate-400 py-12 bg-slate-900/60 rounded-2xl border border-slate-800">
+                <i class="fa-solid fa-box-open text-3xl mb-2 text-cyan-400/40 block"></i>
+                Nie masz jeszcze żadnych złożonych zamówień.
+            </div>`;
+        return;
+    }
+
+    userOrders.forEach(order => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3';
+        
+        const itemsListHtml = order.items.map(item => `
+            <div class="flex items-center gap-2 text-xs text-slate-300">
+                <img src="${item.imgUrl}" class="w-7 h-7 rounded-lg object-cover border border-white/10">
+                <span>• ${item.name}</span>
+                <span class="text-cyan-400 font-extrabold ml-auto">${item.pricePLN.toFixed(2)} PLN</span>
+            </div>
+        `).join('');
+
+        card.innerHTML = `
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <div>
+                    <span class="text-xs font-mono text-cyan-400 font-bold">${order.id}</span>
+                    <span class="text-[10px] text-slate-400 block">${order.date}</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${order.status === 'ZREALIZOWANO' ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' : 'bg-amber-950 text-amber-300 border border-amber-500/40'}">
+                    ${order.status}
+                </span>
+            </div>
+
+            <div class="space-y-1.5">${itemsListHtml}</div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 text-xs space-y-1.5">
+                <div class="flex justify-between items-center text-amber-300 font-bold">
+                    <span>🎮 Dodaj do Znajomych Nick Bota:</span>
+                    <button class="copy-dash-bot bg-amber-500 text-slate-950 px-2 py-0.5 rounded text-[10px] font-black uppercase" data-nick="${order.botNick}">Kopiuj</button>
+                </div>
+                <div class="font-mono text-white text-sm bg-slate-900 px-2.5 py-1 rounded border border-slate-800 font-bold flex justify-between items-center">
+                    <span>${order.botNick}</span>
+                </div>
+                <p class="text-[10px] text-slate-400 leading-tight">
+                    💡 <strong>Instrukcja:</strong> Wchodzisz do gry z botem -> Bot daje Duszka -> Zwracasz go -> W lobby Fortnite kupujesz za pyłek!
+                </p>
+            </div>
+
+            <div class="flex justify-between items-center text-xs border-t border-slate-800 pt-2">
+                <span class="text-slate-400 font-bold">Suma:</span>
+                <span class="text-cyan-400 font-black text-sm">${order.totalPLN.toFixed(2)} PLN</span>
+            </div>
+        `;
+
+        card.querySelector('.copy-dash-bot').addEventListener('click', (e) => {
+            const nick = e.target.dataset.nick;
+            navigator.clipboard.writeText(nick);
+            showToast(`Skopiowano nick bota: ${nick}`);
+        });
+
+        dashOrdersList.appendChild(card);
+    });
+}
+
+if (closeDashBtn) closeDashBtn.addEventListener('click', () => dashboardModal.classList.add('closed'));
+
+// Render Products Grid (With Rarity Themes & Instruction Note)
 function renderProducts(items) {
     if (!productsGrid) return;
     productsGrid.innerHTML = '';
@@ -399,6 +581,7 @@ function renderProducts(items) {
 
     items.forEach(product => {
         const card = document.createElement('div');
+        // Rarity Background Gradient Theme applied via CSS class
         card.className = `sprit-card ${product.rarity} p-4 flex flex-col justify-between`;
         
         const rarityLabelText = translations[currentLang][`rarity${product.rarity.charAt(0).toUpperCase() + product.rarity.slice(1)}`] || product.rarity;
@@ -418,9 +601,14 @@ function renderProducts(items) {
                     ${isZeroPoint ? '<span class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-black uppercase bg-amber-500 text-slate-950 shadow-md">+$5 BOOST</span>' : ''}
                 </div>
                 <h3 class="text-base font-black uppercase font-heading text-white line-clamp-1">${product.name}</h3>
-                <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1 mb-3">
+                <div class="flex items-center justify-between text-[11px] text-slate-400 mt-1 mb-2">
                     <span>${editionText} <strong class="text-slate-200">${product.variant}</strong></span>
                     <span class="${product.status === 'Owned' ? 'text-emerald-400 font-bold' : 'text-slate-400'}">${statusText}</span>
+                </div>
+
+                <!-- Fortnite Trade Instruction Box under every card -->
+                <div class="bg-slate-950/70 border border-cyan-500/20 rounded-xl p-2 mb-3 text-[10px] text-cyan-200/90 leading-tight">
+                    <i class="fa-solid fa-handshake mr-1 text-cyan-400"></i> Dodajesz nick bota -> bot daje Duszka -> zwracasz go -> w lobby kupujesz za pyłek!
                 </div>
             </div>
 
@@ -618,7 +806,7 @@ function openCheckout() {
 
 if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', () => checkoutModal.classList.add('closed'));
 
-// Payment Selector
+// Payment Method Selector
 document.querySelectorAll('.pay-method-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.pay-method-btn').forEach(b => {
@@ -672,7 +860,22 @@ function playWinSound() {
     } catch(e) {}
 }
 
-// Submit Payment
+// Copy Bot Nick
+if (copyBotNickBtn) {
+    copyBotNickBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(currentActiveBotNick);
+        showToast(`Skopiowano nick bota: ${currentActiveBotNick}`);
+    });
+}
+
+if (openDashboardAfterSuccess) {
+    openDashboardAfterSuccess.addEventListener('click', () => {
+        if (successModal) successModal.classList.add('closed');
+        openDashboard();
+    });
+}
+
+// Submit Payment & Save Order to Dashboard
 if (submitPaymentBtn) {
     submitPaymentBtn.addEventListener('click', () => {
         submitPaymentBtn.disabled = true;
@@ -688,8 +891,30 @@ if (submitPaymentBtn) {
                 item.status = 'Owned';
             });
 
-            const randomId = Math.floor(100000 + Math.random() * 900000);
-            if (successOrderId) successOrderId.textContent = `#SPRIT-${randomId}`;
+            const randomIdNum = Math.floor(100000 + Math.random() * 900000);
+            const orderIdStr = `#SPRIT-${randomIdNum}`;
+            const randomBotNum = Math.floor(10 + Math.random() * 89);
+            currentActiveBotNick = `SpritVault_Bot${randomBotNum}`;
+
+            if (successOrderId) successOrderId.textContent = orderIdStr;
+            if (successBotNick) successBotNick.textContent = currentActiveBotNick;
+
+            // Save order to User Dashboard
+            let totalPLN = 0;
+            cart.forEach(i => totalPLN += i.pricePLN);
+
+            const newOrder = {
+                id: orderIdStr,
+                date: new Date().toLocaleDateString('pl-PL') + ' ' + new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+                items: [...cart],
+                totalPLN: totalPLN,
+                status: 'Oczekuje na zaproszenie w Fortnite',
+                botNick: currentActiveBotNick
+            };
+
+            userOrders.unshift(newOrder);
+            localStorage.setItem('spritshop_user_orders', JSON.stringify(userOrders));
+
             if (successModal) successModal.classList.remove('closed');
 
             playWinSound();
@@ -760,7 +985,7 @@ if (canvas) {
     animate();
 }
 
-// Init Language & Start Store
+// Init Language, Auth & Start Store
 const langBtn = document.getElementById('lang-toggle-btn');
 if (langBtn) {
     langBtn.addEventListener('click', () => {
@@ -769,4 +994,5 @@ if (langBtn) {
     });
 }
 
+updateAuthUI();
 setLanguage('pl');
