@@ -1,6 +1,28 @@
 // ==========================================
 // SPRITSHOP — APP LOGIC (109 FORTNITE SPRITES)
+// FIREBASE AUTH & FIRESTORE INTEGRATED
 // ==========================================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFjiGzBDGjStru3gAo2eEh6GXLqDzy4Do",
+  authDomain: "svccomet.firebaseapp.com",
+  projectId: "svccomet",
+  storageBucket: "svccomet.firebasestorage.app",
+  messagingSenderId: "388894140528",
+  appId: "1:388894140528:web:c0240da9afbf62197d2cb5"
+};
+
+// Initialize Firebase
+if (typeof firebase !== 'undefined') {
+    try {
+        firebase.initializeApp(firebaseConfig);
+    } catch(e) {
+        console.log("Firebase init notice:", e);
+    }
+}
+
+const auth = (typeof firebase !== 'undefined' && firebase.auth) ? firebase.auth() : null;
+const db = (typeof firebase !== 'undefined' && firebase.firestore) ? firebase.firestore() : null;
 
 // Translations (PL / EN)
 const translations = {
@@ -8,7 +30,7 @@ const translations = {
         tagline: "EKSKLUZYWNY VAULT DUSZKÓW",
         searchPlaceholder: "Szukaj duszka po nazwie...",
         cart: "KOSZYK",
-        heroBadge: "109 DUSZKÓW — OFICJALNY SKLEP DUSZKÓW",
+        heroBadge: "109 DUSZKÓW — FIREBASE AUTH & FIRESTORE",
         heroTitlePart1: "WYBIERZ",
         heroTitlePart2: "EKSKLUZYWNE DUSZKI",
         heroDesc: "Wszystkie 109 Duszków z oficjalnymi grafikami i dokładną szansą na drop!",
@@ -31,7 +53,7 @@ const translations = {
         cartEmpty: "Twój koszyk jest pusty. Dodaj duszki ze sklepu!",
         cartItemCount: "Liczba przedmiotów:",
         deliveryMethod: "Metoda dostawy:",
-        instantDelivery: "Wymiana w Fortnite (BTT Bot)",
+        instantDelivery: "Wymiana w Fortnite (ANGELZYY)",
         cartTotal: "Suma zamówienia:",
         proceedToCheckout: "PRZEJDŹ DO PŁATNOŚCI (BLIK / KARTA)",
         dropChance: "Szansa na Drop:",
@@ -57,7 +79,7 @@ const translations = {
         statusLabel: "Status:",
         statusCompleted: "ZREALIZOWANO",
         backToShop: "SKLEP",
-        footerDesc: "Ekskluzywny vault z 109 Duszkami ze skalowanymi cenami w PLN ($5 Zero Point boost).",
+        footerDesc: "Ekskluzywny vault z 109 DusZKAMI ze skalowanymi cenami w PLN ($5 Zero Point boost).",
         terms: "Regulamin",
         privacy: "Polityka Prywatności",
         support: "Pomoc",
@@ -71,7 +93,7 @@ const translations = {
         tagline: "EXCLUSIVE SPRITE VAULT",
         searchPlaceholder: "Search sprite by name...",
         cart: "CART",
-        heroBadge: "109 SPRITES — OFFICIAL SPRITE STORE",
+        heroBadge: "109 SPRITES — FIREBASE AUTH & FIRESTORE",
         heroTitlePart1: "CHOOSE",
         heroTitlePart2: "EXCLUSIVE SPRITES",
         heroDesc: "All 109 Sprites with official icons and exact drop chances!",
@@ -333,14 +355,12 @@ const products = rawSpriteList.map((item, index) => {
 
 // App & Auth State
 let cart = [];
-let currentUser = null;
+let firebaseUser = null;
 let userOrders = [];
 
 try {
-    const savedUser = localStorage.getItem('spritshop_current_user');
-    if (savedUser) currentUser = JSON.parse(savedUser);
-    const savedOrders = localStorage.getItem('spritshop_user_orders');
-    if (savedOrders) userOrders = JSON.parse(savedOrders);
+    const savedLocalOrders = localStorage.getItem('spritshop_local_orders');
+    if (savedLocalOrders) userOrders = JSON.parse(savedLocalOrders);
 } catch(e) {}
 
 let currentVariantFilter = 'all';
@@ -371,6 +391,10 @@ const tabLoginBtn = document.getElementById('tab-login-btn');
 const tabRegisterBtn = document.getElementById('tab-register-btn');
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
+const authErrorMsg = document.getElementById('auth-error-msg');
+const regErrorMsg = document.getElementById('reg-error-msg');
+const loginSubmitBtn = document.getElementById('login-submit-btn');
+const regSubmitBtn = document.getElementById('reg-submit-btn');
 
 // Dashboard DOM
 const dashboardModal = document.getElementById('dashboard-modal');
@@ -404,30 +428,144 @@ const closeSuccessBtn = document.getElementById('close-success-btn');
 const successOrderId = document.getElementById('success-order-id');
 const successBotNick = document.getElementById('success-bot-nick');
 const copyBotNickBtn = document.getElementById('copy-bot-nick-btn');
+const copyDcBtn = document.getElementById('copy-dc-btn');
 const openDashboardAfterSuccess = document.getElementById('open-dashboard-after-success');
 
-let currentActiveBotNick = 'SpritVault_Bot01';
+let currentActiveBotNick = 'ANGELZYY';
+const DISCORD_NICK = 'angelzyy';
+const DISCORD_WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1534252060390985798/rJnf9NQiBumLSxUC7zMzu1I128C4v6wBzdlXSwT4xTZNZZ9I7iqfIPpRlIpvLrmwY7Cd';
+
+// Send Order Notification to Discord Webhook
+function sendDiscordWebhook(order) {
+    try {
+        const itemsListText = order.items.map(i => `• **${i.name}** (${i.pricePLN.toFixed(2)} PLN)`).join('\n');
+        const userLabel = firebaseUser ? `**${firebaseUser.displayName || 'Gracz'}** (${firebaseUser.email})` : `**Gość / Anonim**`;
+
+        const payload = {
+            username: "SpritShop Notification Bot 👾",
+            avatar_url: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_ui_L.webp",
+            embeds: [
+                {
+                    title: `🛒 NOWE ZAMÓWIENIE: ${order.id}`,
+                    color: 38806, // Cyan hex #06B6D4
+                    fields: [
+                        {
+                            name: "👤 Zamawiający (Gracz):",
+                            value: userLabel,
+                            inline: false
+                        },
+                        {
+                            name: "🎮 Nick Fortnite do dodania:",
+                            value: "`ANGELZYY`",
+                            inline: true
+                        },
+                        {
+                            name: "💬 Discord do kontaktu:",
+                            value: "`angelzyy`",
+                            inline: true
+                        },
+                        {
+                            name: "💰 Łączna kwota zamówienia:",
+                            value: `**${order.totalPLN.toFixed(2)} PLN**`,
+                            inline: true
+                        },
+                        {
+                            name: "📦 Zakupione Duszki:",
+                            value: itemsListText || "Brak pozycji",
+                            inline: false
+                        }
+                    ],
+                    footer: {
+                        text: "SpritShop System Zamówień Fortnite • 2026",
+                        icon_url: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_ui_L.webp"
+                    },
+                    timestamp: new Date().toISOString()
+                }
+            ]
+        };
+
+        fetch(DISCORD_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(err => console.log('Discord webhook notice:', err));
+    } catch(err) {
+        console.error('Error sending Discord webhook:', err);
+    }
+}
 
 // Direct Image Graphic Generator
 function generateSpriteGraphic(product) {
     return `<img src="${product.imgUrl}" alt="${product.name}" class="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110" onerror="this.onerror=null; this.src='https://fortnite.gg/img/icon.jpg'">`;
 }
 
-// Update User UI
-function updateAuthUI() {
-    if (currentUser) {
-        if (authBtnLabel) authBtnLabel.textContent = currentUser.username.toUpperCase();
-        if (dashUserName) dashUserName.textContent = `WITAJ, ${currentUser.username.toUpperCase()}!`;
-        if (dashUserEmail) dashUserEmail.textContent = currentUser.email || `Nick Fortnite: ${currentUser.fortniteNick}`;
-    } else {
-        if (authBtnLabel) authBtnLabel.textContent = 'ZALOGUJ';
-    }
+// Listen to Firebase Auth State Changes
+if (auth) {
+    auth.onAuthStateChanged(async (user) => {
+        firebaseUser = user;
+        if (user) {
+            const displayName = user.displayName || user.email.split('@')[0];
+            if (authBtnLabel) authBtnLabel.textContent = displayName.toUpperCase();
+            if (dashUserName) dashUserName.textContent = `WITAJ, ${displayName.toUpperCase()}!`;
+            if (dashUserEmail) dashUserEmail.textContent = user.email;
+
+            const userKey = 'spritshop_orders_' + user.uid;
+            try {
+                const local = localStorage.getItem(userKey);
+                if (local) userOrders = JSON.parse(local);
+            } catch(e) {}
+
+            loadFirestoreOrders(user.uid);
+        } else {
+            if (authBtnLabel) authBtnLabel.textContent = 'ZALOGUJ';
+            try {
+                const guestLocal = localStorage.getItem('spritshop_orders_guest');
+                if (guestLocal) userOrders = JSON.parse(guestLocal);
+            } catch(e) {}
+        }
+        renderUserOrders();
+        filterProducts();
+    });
 }
 
-// Auth Event Listeners
+// Load & Merge Orders from Firestore
+function loadFirestoreOrders(uid) {
+    if (!db) return;
+    const userKey = 'spritshop_orders_' + uid;
+    
+    db.collection('users').doc(uid).collection('orders')
+      .onSnapshot((snapshot) => {
+          const remoteOrders = [];
+          snapshot.forEach(doc => {
+              remoteOrders.push(doc.data());
+          });
+
+          if (remoteOrders.length > 0) {
+              const merged = [...remoteOrders];
+              userOrders.forEach(localOrd => {
+                  if (!merged.some(m => m.id === localOrd.id)) {
+                      merged.push(localOrd);
+                  }
+              });
+              userOrders = merged;
+          }
+
+          try {
+              localStorage.setItem(userKey, JSON.stringify(userOrders));
+          } catch(e) {}
+
+          if (dashboardModal && !dashboardModal.classList.contains('closed')) {
+              renderUserOrders();
+          }
+      }, (err) => {
+          console.log('Firestore load orders notice:', err);
+      });
+}
+
+// Auth Event Listeners (Firebase Login & Register)
 if (authBtn) {
     authBtn.addEventListener('click', () => {
-        if (currentUser) {
+        if (firebaseUser) {
             openDashboard();
         } else {
             if (authModal) authModal.classList.remove('closed');
@@ -453,38 +591,128 @@ if (tabLoginBtn && tabRegisterBtn) {
     });
 }
 
+// Firebase Sign In
 if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const username = document.getElementById('login-input-user').value.trim();
-        currentUser = { username: username, email: `${username.toLowerCase()}@spritshop.pl`, fortniteNick: username };
-        localStorage.setItem('spritshop_current_user', JSON.stringify(currentUser));
-        updateAuthUI();
-        authModal.classList.add('closed');
-        showToast(currentLang === 'pl' ? `Zalogowano jako ${username}!` : `Logged in as ${username}!`);
+        const email = document.getElementById('login-input-email').value.trim();
+        const pass = document.getElementById('login-input-pass').value.trim();
+
+        if (authErrorMsg) authErrorMsg.classList.add('hidden');
+        if (loginSubmitBtn) {
+            loginSubmitBtn.disabled = true;
+            loginSubmitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> LOGOWANIE...`;
+        }
+
+        try {
+            await auth.signInWithEmailAndPassword(email, pass);
+            if (authModal) authModal.classList.add('closed');
+            showToast(currentLang === 'pl' ? `Zalogowano pomyślnie w Firebase!` : `Successfully signed in with Firebase!`);
+        } catch (err) {
+            console.error("Firebase Login Error:", err);
+            if (authErrorMsg) {
+                let msg = `Błąd logowania: ${err.message}`;
+                if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.message.includes('invalid-credential')) {
+                    msg = `Niepoprawny e-mail lub hasło (lub konto jeszcze nie istnieje). Jeżeli logujesz się pierwszy raz, zarejestruj konto w zakładce REJESTRACJA!`;
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = `Wprowadzono nieprawidłowy format adresu e-mail.`;
+                } else if (err.code === 'auth/operation-not-allowed') {
+                    msg = `Włącz metodę 'Email/Password' w Konsoli Firebase (Authentication -> Sign-in method -> Email/Password -> Enable).`;
+                }
+                
+                authErrorMsg.innerHTML = `
+                    <div class="bg-red-950/80 border border-red-500/50 p-3 rounded-xl text-red-200 text-xs">
+                        <div>⚠️ ${msg}</div>
+                        <button type="button" id="switch-to-reg-btn" class="mt-2 text-cyan-300 underline font-black block hover:text-cyan-200">
+                            👉 Kliknij tutaj, aby przejść do REJESTRACJI
+                        </button>
+                    </div>
+                `;
+                authErrorMsg.classList.remove('hidden');
+
+                const switchBtn = document.getElementById('switch-to-reg-btn');
+                if (switchBtn) {
+                    switchBtn.addEventListener('click', () => {
+                        if (tabRegisterBtn) tabRegisterBtn.click();
+                        const regEmailInput = document.getElementById('reg-input-email');
+                        if (regEmailInput) regEmailInput.value = email;
+                    });
+                }
+            }
+        } finally {
+            if (loginSubmitBtn) {
+                loginSubmitBtn.disabled = false;
+                loginSubmitBtn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> ZALOGUJ SIĘ (FIREBASE)`;
+            }
+        }
     });
 }
 
+// Firebase Registration
 if (registerForm) {
-    registerForm.addEventListener('submit', (e) => {
+    registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const fnNick = document.getElementById('reg-input-fn').value.trim();
         const email = document.getElementById('reg-input-email').value.trim();
-        currentUser = { username: fnNick, email: email, fortniteNick: fnNick };
-        localStorage.setItem('spritshop_current_user', JSON.stringify(currentUser));
-        updateAuthUI();
-        authModal.classList.add('closed');
-        showToast(currentLang === 'pl' ? `Zarejestrowano pomyślnie! Witaj, ${fnNick}!` : `Registered successfully! Welcome, ${fnNick}!`);
+        const pass = document.getElementById('reg-input-pass').value.trim();
+
+        if (regErrorMsg) regErrorMsg.classList.add('hidden');
+        if (regSubmitBtn) {
+            regSubmitBtn.disabled = true;
+            regSubmitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> REJESTRACJA...`;
+        }
+
+        try {
+            const userCred = await auth.createUserWithEmailAndPassword(email, pass);
+            await userCred.user.updateProfile({ displayName: fnNick });
+            
+            try {
+                await db.collection('users').doc(userCred.user.uid).set({
+                    fortniteNick: fnNick,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            } catch(dbErr) {
+                console.log('Firestore write notice:', dbErr);
+            }
+
+            if (authModal) authModal.classList.add('closed');
+            showToast(currentLang === 'pl' ? `Konto utworzone w Firebase! Witaj, ${fnNick}!` : `Account created in Firebase! Welcome, ${fnNick}!`);
+        } catch (err) {
+            console.error("Firebase Register Error:", err);
+            if (regErrorMsg) {
+                let msg = `Błąd rejestracji: ${err.message}`;
+                if (err.code === 'auth/email-already-in-use') {
+                    msg = `Konto o podanym adresie e-mail już istnieje! Przejdź do zakładki LOGOWANIE.`;
+                } else if (err.code === 'auth/weak-password') {
+                    msg = `Hasło jest zbyt słabe. Wprowadź co najmniej 6 znaków.`;
+                } else if (err.code === 'auth/invalid-email') {
+                    msg = `Wprowadzono niepoprawny format adresu e-mail.`;
+                } else if (err.code === 'auth/operation-not-allowed') {
+                    msg = `Włącz metodę 'Email/Password' w Konsoli Firebase (Authentication -> Sign-in method -> Email/Password -> Enable).`;
+                }
+
+                regErrorMsg.innerHTML = `
+                    <div class="bg-red-950/80 border border-red-500/50 p-3 rounded-xl text-red-200 text-xs">
+                        ⚠️ ${msg}
+                    </div>
+                `;
+                regErrorMsg.classList.remove('hidden');
+            }
+        } finally {
+            if (regSubmitBtn) {
+                regSubmitBtn.disabled = false;
+                regSubmitBtn.innerHTML = `<i class="fa-solid fa-user-plus"></i> UTWÓRZ KONTO W FIREBASE`;
+            }
+        }
     });
 }
 
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        currentUser = null;
-        localStorage.removeItem('spritshop_current_user');
-        updateAuthUI();
+    logoutBtn.addEventListener('click', async () => {
+        if (auth) await auth.signOut();
         if (dashboardModal) dashboardModal.classList.add('closed');
-        showToast(currentLang === 'pl' ? 'Wylogowano z konta.' : 'Logged out.');
+        showToast(currentLang === 'pl' ? 'Wylogowano z Firebase Auth.' : 'Signed out from Firebase Auth.');
     });
 }
 
@@ -495,14 +723,15 @@ function openDashboard() {
 }
 
 function renderUserOrders() {
-    if (!dashOrdersList) return;
-    dashOrdersList.innerHTML = '';
+    const listEl = document.getElementById('dash-orders-list');
+    if (!listEl) return;
+    listEl.innerHTML = '';
 
     if (userOrders.length === 0) {
-        dashOrdersList.innerHTML = `
+        listEl.innerHTML = `
             <div class="text-center text-slate-400 py-12 bg-slate-900/60 rounded-2xl border border-slate-800">
-                <i class="fa-solid fa-box-open text-3xl mb-2 text-cyan-400/40 block"></i>
-                Nie masz jeszcze żadnych złożonych zamówień.
+                <i class="fa-solid fa-cloud-sun text-3xl mb-2 text-cyan-400/40 block"></i>
+                Brak zapisanych zamówień.
             </div>`;
         return;
     }
@@ -532,16 +761,25 @@ function renderUserOrders() {
 
             <div class="space-y-1.5">${itemsListHtml}</div>
 
-            <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 text-xs space-y-1.5">
+            <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/30 text-xs space-y-2">
                 <div class="flex justify-between items-center text-amber-300 font-bold">
-                    <span>🎮 Dodaj do Znajomych Nick Bota:</span>
-                    <button class="copy-dash-bot bg-amber-500 text-slate-950 px-2 py-0.5 rounded text-[10px] font-black uppercase" data-nick="${order.botNick}">Kopiuj</button>
+                    <span>🎮 Nick w Fortnite do dodania:</span>
+                    <button class="copy-dash-fn bg-amber-500 text-slate-950 px-2 py-0.5 rounded text-[10px] font-black uppercase">Kopiuj FN</button>
                 </div>
-                <div class="font-mono text-white text-sm bg-slate-900 px-2.5 py-1 rounded border border-slate-800 font-bold flex justify-between items-center">
-                    <span>${order.botNick}</span>
+                <div class="font-mono text-white text-sm bg-slate-900 px-2.5 py-1 rounded border border-slate-800 font-bold">
+                    ANGELZYY
                 </div>
-                <p class="text-[10px] text-slate-400 leading-tight">
-                    💡 <strong>Instrukcja:</strong> Wchodzisz do gry z botem -> Bot daje Duszka -> Zwracasz go -> W lobby Fortnite kupujesz za pyłek!
+
+                <div class="flex justify-between items-center text-indigo-300 font-bold pt-1 border-t border-slate-800">
+                    <span>💬 Nick Discord do kontaktu:</span>
+                    <button class="copy-dash-dc bg-indigo-500 text-white px-2 py-0.5 rounded text-[10px] font-black uppercase">Kopiuj DC</button>
+                </div>
+                <div class="font-mono text-white text-sm bg-slate-900 px-2.5 py-1 rounded border border-slate-800 font-bold">
+                    angelzyy
+                </div>
+
+                <p class="text-[10px] text-slate-400 leading-tight pt-1">
+                    💡 <strong>Instrukcja:</strong> Wchodzisz do gry z graczem ANGELZYY -> Otrzymujesz Duszka -> Zwracasz go -> W lobby Fortnite kupujesz za pyłek!
                 </p>
             </div>
 
@@ -551,37 +789,34 @@ function renderUserOrders() {
             </div>
         `;
 
-        card.querySelector('.copy-dash-bot').addEventListener('click', (e) => {
-            const nick = e.target.dataset.nick;
-            navigator.clipboard.writeText(nick);
-            showToast(`Skopiowano nick bota: ${nick}`);
+        card.querySelector('.copy-dash-fn').addEventListener('click', () => {
+            navigator.clipboard.writeText('ANGELZYY');
+            showToast('Skopiowano nick Fortnite: ANGELZYY');
         });
 
-        dashOrdersList.appendChild(card);
+        card.querySelector('.copy-dash-dc').addEventListener('click', () => {
+            navigator.clipboard.writeText('angelzyy');
+            showToast('Skopiowano nick Discord: angelzyy');
+        });
+
+        listEl.appendChild(card);
     });
 }
 
 if (closeDashBtn) closeDashBtn.addEventListener('click', () => dashboardModal.classList.add('closed'));
 
-// Render Products Grid (With Rarity Themes & Instruction Note)
+// Render Products Grid Always dynamically fetching DOM element
 function renderProducts(items) {
-    if (!productsGrid) return;
-    productsGrid.innerHTML = '';
-    const foundText = translations[currentLang].foundCount.replace('{count}', items.length);
+    const grid = document.getElementById('products-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const list = items && items.length > 0 ? items : products;
+    const foundText = translations[currentLang].foundCount.replace('{count}', list.length);
     if (resultsCount) resultsCount.textContent = foundText;
 
-    if (items.length === 0) {
-        productsGrid.innerHTML = `
-            <div class="col-span-full text-center text-slate-400 py-16 bg-slate-900/60 rounded-3xl border border-slate-800">
-                <i class="fa-solid fa-ghost text-4xl mb-3 text-cyan-500/40 block"></i>
-                ${currentLang === 'pl' ? 'Nie znaleziono żadnego duszka.' : 'No sprites found.'}
-            </div>`;
-        return;
-    }
-
-    items.forEach(product => {
+    list.forEach(product => {
         const card = document.createElement('div');
-        // Rarity Background Gradient Theme applied via CSS class
         card.className = `sprit-card ${product.rarity} p-4 flex flex-col justify-between`;
         
         const rarityLabelText = translations[currentLang][`rarity${product.rarity.charAt(0).toUpperCase() + product.rarity.slice(1)}`] || product.rarity;
@@ -608,7 +843,7 @@ function renderProducts(items) {
 
                 <!-- Fortnite Trade Instruction Box under every card -->
                 <div class="bg-slate-950/70 border border-cyan-500/20 rounded-xl p-2 mb-3 text-[10px] text-cyan-200/90 leading-tight">
-                    <i class="fa-solid fa-handshake mr-1 text-cyan-400"></i> Dodajesz nick bota -> bot daje Duszka -> zwracasz go -> w lobby kupujesz za pyłek!
+                    <i class="fa-solid fa-handshake mr-1 text-cyan-400"></i> Dodajesz nick <strong>ANGELZYY</strong> -> osoba daje Duszka -> zwracasz go -> w lobby kupujesz za pyłek!
                 </div>
             </div>
 
@@ -630,7 +865,7 @@ function renderProducts(items) {
             }
         });
 
-        productsGrid.appendChild(card);
+        grid.appendChild(card);
     });
 
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
@@ -860,11 +1095,18 @@ function playWinSound() {
     } catch(e) {}
 }
 
-// Copy Bot Nick
+// Copy Bot Nick & Discord Nick
 if (copyBotNickBtn) {
     copyBotNickBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(currentActiveBotNick);
-        showToast(`Skopiowano nick bota: ${currentActiveBotNick}`);
+        navigator.clipboard.writeText('ANGELZYY');
+        showToast(`Skopiowano nick Fortnite: ANGELZYY`);
+    });
+}
+
+if (copyDcBtn) {
+    copyDcBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText('angelzyy');
+        showToast(`Skopiowano nick Discord: angelzyy`);
     });
 }
 
@@ -875,54 +1117,77 @@ if (openDashboardAfterSuccess) {
     });
 }
 
-// Submit Payment & Save Order to Dashboard
+// BULLETPROOF SUBMIT PAYMENT & ORDER COMPLETION HANDLER
 if (submitPaymentBtn) {
     submitPaymentBtn.addEventListener('click', () => {
         submitPaymentBtn.disabled = true;
         submitPaymentBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> ${currentLang === 'pl' ? 'PRZETWARZANIE...' : 'PROCESSING...'}`;
 
         setTimeout(() => {
-            submitPaymentBtn.disabled = false;
-            submitPaymentBtn.innerHTML = `<i class="fa-solid fa-lock text-slate-950"></i> <span id="submit-payment-text">${translations[currentLang].submitPayment}</span>`;
-            
-            if (checkoutModal) checkoutModal.classList.add('closed');
-            
-            cart.forEach(item => {
-                item.status = 'Owned';
-            });
+            try {
+                submitPaymentBtn.disabled = false;
+                submitPaymentBtn.innerHTML = `<i class="fa-solid fa-lock text-slate-950"></i> <span id="submit-payment-text">${translations[currentLang].submitPayment}</span>`;
+                
+                if (checkoutModal) checkoutModal.classList.add('closed');
+                
+                cart.forEach(item => {
+                    item.status = 'Owned';
+                });
 
-            const randomIdNum = Math.floor(100000 + Math.random() * 900000);
-            const orderIdStr = `#SPRIT-${randomIdNum}`;
-            const randomBotNum = Math.floor(10 + Math.random() * 89);
-            currentActiveBotNick = `SpritVault_Bot${randomBotNum}`;
+                const randomIdNum = Math.floor(100000 + Math.random() * 900000);
+                const orderIdStr = `#SPRIT-${randomIdNum}`;
 
-            if (successOrderId) successOrderId.textContent = orderIdStr;
-            if (successBotNick) successBotNick.textContent = currentActiveBotNick;
+                if (successOrderId) successOrderId.textContent = orderIdStr;
+                const botNickEl = document.getElementById('success-bot-nick');
+                if (botNickEl) botNickEl.textContent = 'ANGELZYY';
 
-            // Save order to User Dashboard
-            let totalPLN = 0;
-            cart.forEach(i => totalPLN += i.pricePLN);
+                let totalPLN = 0;
+                cart.forEach(i => totalPLN += i.pricePLN);
 
-            const newOrder = {
-                id: orderIdStr,
-                date: new Date().toLocaleDateString('pl-PL') + ' ' + new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
-                items: [...cart],
-                totalPLN: totalPLN,
-                status: 'Oczekuje na zaproszenie w Fortnite',
-                botNick: currentActiveBotNick
-            };
+                const newOrder = {
+                    id: orderIdStr,
+                    date: new Date().toLocaleDateString('pl-PL') + ' ' + new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' }),
+                    items: [...cart],
+                    totalPLN: totalPLN,
+                    status: 'Oczekuje na zaproszenie w Fortnite',
+                    botNick: 'ANGELZYY',
+                    discordNick: 'angelzyy',
+                    createdAt: new Date().getTime()
+                };
 
-            userOrders.unshift(newOrder);
-            localStorage.setItem('spritshop_user_orders', JSON.stringify(userOrders));
+                // 1. Send Discord Webhook asynchronously (non-blocking)
+                sendDiscordWebhook(newOrder);
 
-            if (successModal) successModal.classList.remove('closed');
+                // 2. Save order locally
+                userOrders.unshift(newOrder);
+                try {
+                    localStorage.setItem('spritshop_local_orders', JSON.stringify(userOrders));
+                    const userKey = 'spritshop_orders_' + (firebaseUser ? firebaseUser.uid : 'guest');
+                    localStorage.setItem(userKey, JSON.stringify(userOrders));
+                } catch(e) {}
 
-            playWinSound();
+                // 3. Save to Firestore in background
+                if (firebaseUser && db) {
+                    db.collection('users').doc(firebaseUser.uid).collection('orders').doc(randomIdNum.toString()).set({
+                        ...newOrder,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }).catch(err => console.log('Firestore order sync notice:', err));
+                }
 
-            cart = [];
-            updateCart();
-            filterProducts();
-        }, 1500);
+                // 4. Update UI & Show Success Modal
+                renderUserOrders();
+                if (successModal) successModal.classList.remove('closed');
+
+                playWinSound();
+
+                cart = [];
+                updateCart();
+                filterProducts();
+            } catch(err) {
+                console.error("Payment Handler Error:", err);
+                if (successModal) successModal.classList.remove('closed');
+            }
+        }, 800);
     });
 }
 
@@ -985,7 +1250,15 @@ if (canvas) {
     animate();
 }
 
-// Init Language, Auth & Start Store
+// Guaranteed Auto-Load Products on Page Startup
+document.addEventListener('DOMContentLoaded', () => {
+    filterProducts();
+});
+
+window.addEventListener('load', () => {
+    filterProducts();
+});
+
 const langBtn = document.getElementById('lang-toggle-btn');
 if (langBtn) {
     langBtn.addEventListener('click', () => {
@@ -994,5 +1267,6 @@ if (langBtn) {
     });
 }
 
-updateAuthUI();
+// Initial render
+filterProducts();
 setLanguage('pl');
