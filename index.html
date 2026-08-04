@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpritShop — Vault 109 Duszków</title>
+    <title>SpritShop — Vault 109 Duszków (Firebase Auth)</title>
     <meta name="description" content="Oficjalny sklep SpritShop. 109 unikalnych Duszków ze skalowaną ceną rzadkości i szansy na drop. Natychmiastowe płatności BLIK.">
     
     <!-- Google Fonts & Tailwind CSS -->
@@ -14,6 +14,11 @@
 
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Firebase SDK 10 Compat Libraries -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -84,7 +89,7 @@
             
             <div class="max-w-2xl text-center md:text-left z-10">
                 <span class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-400/40 text-cyan-300 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider mb-4">
-                    <i class="fa-solid fa-gem text-amber-400"></i> <span data-i18n="heroBadge">109 DUSZKÓW — OFICJALNY SKLEP DUSZKÓW</span>
+                    <i class="fa-solid fa-fire text-amber-400"></i> <span data-i18n="heroBadge">109 DUSZKÓW — FIREBASE AUTH & FIRESTORE</span>
                 </span>
                 <h1 class="text-3xl sm:text-5xl font-black uppercase font-heading tracking-wide leading-tight text-white mb-4">
                     <span data-i18n="heroTitlePart1">WYBIERZ</span> <span class="bg-gradient-to-r from-cyan-400 via-indigo-200 to-fuchsia-400 bg-clip-text text-transparent" data-i18n="heroTitlePart2">EKSKLUZYWNE DUSZKI</span>
@@ -98,7 +103,7 @@
                     <i class="fa-solid fa-handshake-angle text-cyan-400 text-lg mt-0.5 flex-shrink-0"></i>
                     <div>
                         <strong class="text-white block uppercase tracking-wider font-extrabold mb-0.5">Jak działa przekazanie Duszka w gra Fortnite?</strong>
-                        Po zakupie otrzymujesz Nick Bota. Dodajesz go do znajomych, wchodzicie do gry, bot przekazuje Duszka, zwracasz go, a w lobby Fortnite wykupujesz go za pyłek!
+                        Po zakupie dodajesz do znajomych w Fortnite nick: <strong class="text-amber-400">ANGELZYY</strong> (Discord: <strong class="text-indigo-400">angelzyy</strong>). Osoba daje duszka w grze, zwracasz go, a w lobby Fortnite wykupujesz go za pyłek!
                     </div>
                 </div>
 
@@ -196,12 +201,12 @@
                 </div>
                 <div class="flex justify-between text-slate-400">
                     <span data-i18n="deliveryMethod">Metoda dostawy:</span>
-                    <span class="text-emerald-400 font-bold" data-i18n="instantDelivery">Wymiana w Fortnite (BTT Bot)</span>
+                    <span class="text-emerald-400 font-bold" data-i18n="instantDelivery">Wymiana w Fortnite (ANGELZYY)</span>
                 </div>
             </div>
 
             <div class="flex justify-between items-center text-sm font-bold border-t border-white/10 pt-3">
-                <span class="text-slate-300 font-extrabold uppercase" data-i18n="cartTotal">Suma zamówienia:</span>
+                <span class="text-slate-300 uppercase" data-i18n="cartTotal">Suma zamówienia:</span>
                 <span class="text-cyan-400 font-black text-2xl" id="cart-total-pln">0.00 PLN</span>
             </div>
 
@@ -237,7 +242,7 @@
             <!-- Trade Info Box -->
             <div class="bg-cyan-950/60 border border-cyan-500/30 rounded-2xl p-3 text-[11px] text-cyan-200 text-left mb-4 shadow-inner">
                 <i class="fa-solid fa-circle-info text-cyan-400 mr-1"></i>
-                Po zakupie w panelu otrzymasz nick znajomego w Fortnite. Bot przekazuje duszka, oddajesz go i w lobby wykupujesz go za pyłek!
+                Po zakupie dodajesz w Fortnite nick: <strong class="text-amber-400">ANGELZYY</strong> (lub Discord: <strong class="text-indigo-300">angelzyy</strong>). Osoba daje duszka w grze, zwracasz go i w lobby wykupujesz za pyłek!
             </div>
 
             <div class="flex items-center justify-center gap-3 py-2">
@@ -280,9 +285,11 @@
             </div>
 
             <!-- Trade Note inside Checkout -->
-            <div class="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-3.5 mb-6 text-xs text-amber-200 text-left">
+            <div class="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-3.5 mb-6 text-xs text-amber-200 text-left space-y-1">
                 <strong class="text-amber-400 block font-bold mb-1">⚡ Instrukcja Odbioru w Fortnite:</strong>
-                Po opłaceniu zamówienia w zakładce <strong>Dashboard (Moje Zamówienia)</strong> otrzymasz nick konta Epic. Dodajesz je w gry, dostajesz duszka w meczu, zwracasz go botowi, a następnie w lobby Fortnite wykupujesz go za pyłek.
+                <div>🎮 Nick w Fortnite do dodania: <strong class="text-white bg-slate-900 px-2 py-0.5 rounded border border-amber-500/40 font-mono">ANGELZYY</strong></div>
+                <div>💬 Discord do kontaktu: <strong class="text-white bg-slate-900 px-2 py-0.5 rounded border border-indigo-500/40 font-mono">angelzyy</strong></div>
+                <p class="text-[11px] text-slate-300 mt-1">Po zapłaceniu automatycznie wysyłamy powiadomienie z ID zamówienia na serwer Discord!</p>
             </div>
 
             <!-- Payment Method Selection -->
@@ -357,11 +364,21 @@
             <div class="bg-slate-900 p-4 rounded-2xl text-xs text-left space-y-2 mb-6 border border-slate-800 font-mono">
                 <div class="text-slate-400"><span data-i18n="orderIdLabel">ID Zamówienia:</span> <span class="text-cyan-400" id="success-order-id">#SPRIT-88491</span></div>
                 <div class="text-slate-400"><span data-i18n="statusLabel">Status:</span> <span class="text-emerald-400" data-i18n="statusCompleted">ZREALIZOWANO</span></div>
-                <div class="text-slate-300 pt-2 border-t border-slate-800">
-                    <span class="text-amber-400 font-bold block mb-1">📌 NICK BOTAw FORTNITE:</span>
-                    <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-amber-500/40">
-                        <strong id="success-bot-nick" class="text-white text-sm font-sans">SpritVault_Bot99</strong>
-                        <button id="copy-bot-nick-btn" class="bg-amber-500 text-slate-950 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase">Kopiuj</button>
+                
+                <div class="text-slate-300 pt-2 border-t border-slate-800 space-y-2">
+                    <div>
+                        <span class="text-amber-400 font-bold block mb-1">🎮 NICK FORTNITE DO DODANIA:</span>
+                        <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-amber-500/40">
+                            <strong id="success-bot-nick" class="text-white text-sm font-sans">ANGELZYY</strong>
+                            <button id="copy-bot-nick-btn" class="bg-amber-500 text-slate-950 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase">Kopiuj</button>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-indigo-400 font-bold block mb-1">💬 DISCORD DO KONTAKTU:</span>
+                        <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-indigo-500/40">
+                            <strong class="text-white text-sm font-sans">angelzyy</strong>
+                            <button id="copy-dc-btn" class="bg-indigo-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-black uppercase">Kopiuj DC</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -377,10 +394,17 @@
         </div>
     </div>
 
-    <!-- ================= 9. USER AUTH MODAL (LOGIN / REGISTER) ================= -->
+    <!-- ================= 9. FIREBASE AUTH MODAL (LOGIN / REGISTER) ================= -->
     <div id="auth-modal" class="modal-view closed fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
         <div class="max-w-md w-full bg-slate-950 border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 relative shadow-2xl">
             <button id="close-auth-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-900 text-slate-400 hover:text-white flex items-center justify-center text-base">✕</button>
+
+            <!-- Auth Header badge -->
+            <div class="text-center mb-4">
+                <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase text-cyan-400 bg-cyan-950/80 border border-cyan-500/40">
+                    <i class="fa-solid fa-fire text-amber-400 mr-1"></i> FIREBASE AUTHENTICATION
+                </span>
+            </div>
 
             <!-- Auth Tabs -->
             <div class="flex border-b border-slate-800 mb-6">
@@ -388,25 +412,26 @@
                 <button id="tab-register-btn" class="auth-tab-btn w-1/2 pb-3 text-sm font-black uppercase text-center">REJESTRACJA</button>
             </div>
 
-            <!-- Login Form -->
+            <!-- Firebase Login Form -->
             <form id="login-form" class="space-y-4 text-xs">
                 <div>
-                    <label class="block text-slate-300 font-bold mb-1">Adres E-mail / Nick</label>
-                    <input type="text" id="login-input-user" required placeholder="np. gracik123" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                    <label class="block text-slate-300 font-bold mb-1">Adres E-mail</label>
+                    <input type="email" id="login-input-email" required placeholder="twoj@email.com" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
                     <label class="block text-slate-300 font-bold mb-1">Hasło</label>
                     <input type="password" id="login-input-pass" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
                 </div>
-                <button type="submit" class="sprit-btn w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs">
-                    ZALOGUJ SIĘ
+                <div id="auth-error-msg" class="text-red-400 text-xs font-bold hidden"></div>
+                <button type="submit" id="login-submit-btn" class="sprit-btn w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> ZALOGUJ SIĘ (FIREBASE)
                 </button>
             </form>
 
-            <!-- Register Form -->
+            <!-- Firebase Register Form -->
             <form id="register-form" class="space-y-4 text-xs hidden">
                 <div>
-                    <label class="block text-slate-300 font-bold mb-1">Twój Nick w Fortnite</label>
+                    <label class="block text-slate-300 font-bold mb-1">Twój Nick w Fortnite / Nazwa</label>
                     <input type="text" id="reg-input-fn" required placeholder="np. PlayerOne_FN" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
@@ -414,11 +439,12 @@
                     <input type="email" id="reg-input-email" required placeholder="gracz@sklep.pl" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
                 </div>
                 <div>
-                    <label class="block text-slate-300 font-bold mb-1">Stwórz Hasło</label>
-                    <input type="password" id="reg-input-pass" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                    <label class="block text-slate-300 font-bold mb-1">Stwórz Hasło (min. 6 znaków)</label>
+                    <input type="password" id="reg-input-pass" required minlength="6" placeholder="••••••••" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
                 </div>
-                <button type="submit" class="sprit-btn w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs">
-                    UTWÓRZ KONTO SPRITSHOP
+                <div id="reg-error-msg" class="text-red-400 text-xs font-bold hidden"></div>
+                <button type="submit" id="reg-submit-btn" class="sprit-btn w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> UTWÓRZ KONTO W FIREBASE
                 </button>
             </form>
         </div>
@@ -436,8 +462,8 @@
                         👤
                     </div>
                     <div>
-                        <h2 class="text-xl font-black uppercase font-heading text-white" id="dash-user-name">PANEL GRACZA</h2>
-                        <p class="text-xs text-slate-400" id="dash-user-email">Zalogowany profil SpritShop</p>
+                        <h2 class="text-xl font-black uppercase font-heading text-white" id="dash-user-name">PANEL GRACZA FIREBASE</h2>
+                        <p class="text-xs text-slate-400" id="dash-user-email">Zalogowano przez Firebase Auth</p>
                     </div>
                 </div>
                 <button id="logout-btn" class="bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900/80 px-4 py-2 rounded-xl text-xs font-bold transition">
@@ -448,7 +474,7 @@
             <!-- Orders Section -->
             <div>
                 <h3 class="text-sm font-black uppercase tracking-wider text-cyan-400 mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left"></i> MOJE ZAMÓWIENIA I BOTY FORTNITE
+                    <i class="fa-solid fa-cloud-arrow-down text-amber-400"></i> MOJE ZAMÓWIENIA (ANGELZYY)
                 </h3>
 
                 <div id="dash-orders-list" class="space-y-4">
