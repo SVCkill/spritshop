@@ -1,5 +1,5 @@
 // ==========================================
-// SPRITSHOP — APP LOGIC (108 DUSZKÓW)
+// SPRITSHOP — APP LOGIC (109 FORTNITE SPRITES)
 // ==========================================
 
 // Translations (PL / EN)
@@ -8,14 +8,14 @@ const translations = {
         tagline: "EKSKLUZYWNY VAULT DUSZKÓW",
         searchPlaceholder: "Szukaj duszka po nazwie...",
         cart: "KOSZYK",
-        heroBadge: "108 DUSZKÓW — ŁATWY EDYTOR ZDJĘĆ",
+        heroBadge: "109 DUSZKÓW — OFICJALNY SKLEP DUSZKÓW",
         heroTitlePart1: "WYBIERZ",
         heroTitlePart2: "EKSKLUZYWNE DUSZKI",
-        heroDesc: "Kliknij w dowolnego duszka, aby wkleić własny link do zdjęcia! Twoje zmiany zapisują się automatycznie.",
-        browseBtn: "PRZEGLĄDAJ KATALOG (108)",
+        heroDesc: "Wszystkie 109 Duszków z oficjalnymi grafikami i dokładną szansą na drop!",
+        browseBtn: "PRZEGLĄDAJ KATALOG (109)",
         statTitle: "Unikalnych Duszków",
-        statDesc: "Wklejaj linki do obrazków bezpośrednio w oknie podglądu!",
-        filterAll: "Wszystkie Duszki (108)",
+        statDesc: "Oficjalne grafiki i ceny w PLN!",
+        filterAll: "Wszystkie Duszki (109)",
         rarityLabel: "Rzadkość:",
         rarityAll: "Wszystkie",
         raritySpecial: "Specjalne",
@@ -57,7 +57,7 @@ const translations = {
         statusLabel: "Status:",
         statusCompleted: "ZREALIZOWANO",
         backToShop: "WRÓĆ DO SKLEPU",
-        footerDesc: "Ekskluzywny vault z 108 Duszkami ze skalowanymi cenami w PLN ($5 Zero Point boost).",
+        footerDesc: "Ekskluzywny vault z 109 DusZKAMI ze skalowanymi cenami w PLN ($5 Zero Point boost).",
         terms: "Regulamin",
         privacy: "Polityka Prywatności",
         support: "Pomoc",
@@ -65,21 +65,20 @@ const translations = {
         notOwned: "Nieposiadany",
         addBtn: "KUP TERAZ",
         edition: "Edycja:",
-        foundCount: "Wyświetlono: {count} z 108 Duszków",
-        pasteImageLabel: "Wklej link do obrazka dla tego duszka:"
+        foundCount: "Wyświetlono: {count} z 109 Duszków"
     },
     en: {
         tagline: "EXCLUSIVE SPRITE VAULT",
         searchPlaceholder: "Search sprite by name...",
         cart: "CART",
-        heroBadge: "108 SPRITES — EASY IMAGE EDITOR",
+        heroBadge: "109 SPRITES — OFFICIAL SPRITE STORE",
         heroTitlePart1: "CHOOSE",
         heroTitlePart2: "EXCLUSIVE SPRITES",
-        heroDesc: "Click on any sprite to paste your custom image URL! Your changes are saved automatically.",
-        browseBtn: "BROWSE CATALOG (108)",
+        heroDesc: "All 109 Sprites with official icons and exact drop chances!",
+        browseBtn: "BROWSE CATALOG (109)",
         statTitle: "Unique Sprites",
-        statDesc: "Paste image links directly in the preview modal!",
-        filterAll: "All Sprites (108)",
+        statDesc: "Official artwork and scaled pricing in PLN!",
+        filterAll: "All Sprites (109)",
         rarityLabel: "Rarity:",
         rarityAll: "All",
         raritySpecial: "Special",
@@ -121,7 +120,7 @@ const translations = {
         statusLabel: "Status:",
         statusCompleted: "COMPLETED",
         backToShop: "BACK TO SHOP",
-        footerDesc: "Exclusive vault with 108 Sprites & scaled pricing in PLN ($5 Zero Point boost).",
+        footerDesc: "Exclusive vault with 109 Sprites & scaled pricing in PLN ($5 Zero Point boost).",
         terms: "Terms of Service",
         privacy: "Privacy Policy",
         support: "Support",
@@ -129,8 +128,7 @@ const translations = {
         notOwned: "Not owned",
         addBtn: "BUY NOW",
         edition: "Edition:",
-        foundCount: "Displayed: {count} of 108 Sprites",
-        pasteImageLabel: "Paste image link for this sprite:"
+        foundCount: "Displayed: {count} of 109 Sprites"
     }
 };
 
@@ -160,116 +158,126 @@ function setLanguage(lang) {
     filterProducts();
 }
 
-// Raw Sprite Catalog (108 items)
+// Complete 109 Fortnite Sprites Catalog with Direct Fortnite.GG Icons
 const rawSpriteList = [
-    { name: "John Wick Sprite", base: "John Wick", rarity: "mythic", chance: "0%", status: "Not owned" },
-    { name: "Batman Sprite", base: "Batman", rarity: "mythic", chance: "1.44%", status: "Not owned" },
-    { name: "Cube Batman Sprite", base: "Cube Batman", rarity: "special", chance: "0.02%", status: "Not owned" },
-    { name: "Gold Batman Sprite", base: "Gold Batman", rarity: "special", chance: "0.17%", status: "Not owned" },
-    { name: "Gummy Batman Sprite", base: "Gummy Batman", rarity: "special", chance: "0.1%", status: "Not owned" },
-    { name: "Galaxy Batman Sprite", base: "Galaxy Batman", rarity: "special", chance: "0.07%", status: "Not owned" },
-    { name: "Holofoil Batman Sprite", base: "Holofoil Batman", rarity: "special", chance: "0.34%", status: "Not owned" },
-    { name: "Water Sprite", base: "Water", rarity: "rare", chance: "0%", status: "Not owned" },
-    { name: "Gold Water Sprite", base: "Gold Water", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Quack Water Sprite", base: "Quack Water", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Gummy Water Sprite", base: "Gummy Water", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Galaxy Water Sprite", base: "Galaxy Water", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Holofoil Water Sprite", base: "Holofoil Water", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Earth Sprite", base: "Earth", rarity: "rare", chance: "0%", status: "Not owned" },
-    { name: "Cube Earth Sprite", base: "Cube Earth", rarity: "special", chance: "0.21%", status: "Not owned" },
-    { name: "Gold Earth Sprite", base: "Gold Earth", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Quack Earth Sprite", base: "Quack Earth", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Gummy Earth Sprite", base: "Gummy Earth", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Galaxy Earth Sprite", base: "Galaxy Earth", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Fire Sprite", base: "Fire", rarity: "rare", chance: "0%", status: "Not owned" },
-    { name: "Cube Fire Sprite", base: "Cube Fire", rarity: "special", chance: "0.21%", status: "Not owned" },
-    { name: "Gold Fire Sprite", base: "Gold Fire", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Quack Fire Sprite", base: "Quack Fire", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Gummy Fire Sprite", base: "Gummy Fire", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Galaxy Fire Sprite", base: "Galaxy Fire", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Holofoil Fire Sprite", base: "Holofoil Fire", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Duck Sprite", base: "Duck", rarity: "epic", chance: "6.48%", status: "Not owned" },
-    { name: "Gold Duck Sprite", base: "Gold Duck", rarity: "special", chance: "0.62%", status: "Not owned" },
-    { name: "Gummy Duck Sprite", base: "Gummy Duck", rarity: "special", chance: "0.37%", status: "Not owned" },
-    { name: "Galaxy Duck Sprite", base: "Galaxy Duck", rarity: "special", chance: "0.25%", status: "Not owned" },
-    { name: "Ghost Sprite", base: "Ghost", rarity: "epic", chance: "5.25%", status: "Not owned" },
-    { name: "Gold Ghost Sprite", base: "Gold Ghost", rarity: "special", chance: "0.62%", status: "Not owned" },
-    { name: "Gummy Ghost Sprite", base: "Gummy Ghost", rarity: "special", chance: "0.37%", status: "Not owned" },
-    { name: "Galaxy Ghost Sprite", base: "Galaxy Ghost", rarity: "special", chance: "0.25%", status: "Not owned" },
-    { name: "Holofoil Ghost Sprite", base: "Holofoil Ghost", rarity: "special", chance: "1.23%", status: "Not owned" },
-    { name: "Dream Sprite", base: "Dream", rarity: "legendary", chance: "4.45%", status: "Not owned" },
-    { name: "Cube Dream Sprite", base: "Cube Dream", rarity: "special", chance: "0.04%", status: "Not owned" },
-    { name: "Gold Dream Sprite", base: "Gold Dream", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Gummy Dream Sprite", base: "Gummy Dream", rarity: "special", chance: "0.26%", status: "Not owned" },
-    { name: "Galaxy Dream Sprite", base: "Galaxy Dream", rarity: "special", chance: "0.17%", status: "Not owned" },
-    { name: "Demon Sprite", base: "Demon", rarity: "epic", chance: "6.48%", status: "Not owned" },
-    { name: "Gold Demon Sprite", base: "Gold Demon", rarity: "special", chance: "0.62%", status: "Not owned" },
-    { name: "Gummy Demon Sprite", base: "Gummy Demon", rarity: "special", chance: "0.37%", status: "Not owned" },
-    { name: "Galaxy Demon Sprite", base: "Galaxy Demon", rarity: "special", chance: "0.25%", status: "Not owned" },
-    { name: "Punk Sprite", base: "Punk", rarity: "legendary", chance: "4.45%", status: "Not owned" },
-    { name: "Cube Punk Sprite", base: "Cube Punk", rarity: "special", chance: "0.04%", status: "Not owned" },
-    { name: "Gold Punk Sprite", base: "Gold Punk", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Gummy Punk Sprite", base: "Gummy Punk", rarity: "special", chance: "0.26%", status: "Not owned" },
-    { name: "Galaxy Punk Sprite", base: "Galaxy Punk", rarity: "special", chance: "0.17%", status: "Not owned" },
-    { name: "King Sprite", base: "King", rarity: "epic", chance: "5.25%", status: "Not owned" },
-    { name: "Gold King Sprite", base: "Gold King", rarity: "special", chance: "0.62%", status: "Not owned" },
-    { name: "Gummy King Sprite", base: "Gummy King", rarity: "special", chance: "0.37%", status: "Not owned" },
-    { name: "Galaxy King Sprite", base: "Galaxy King", rarity: "special", chance: "0.25%", status: "Not owned" },
-    { name: "Holofoil King Sprite", base: "Holofoil King", rarity: "special", chance: "1.23%", status: "Not owned" },
-    { name: "Burnt Peanut", base: "Burnt Peanut", rarity: "mythic", chance: "2.14%", status: "Not owned" },
-    { name: "Vini Jr. Sprite", base: "Vini Jr.", rarity: "mythic", chance: "2.14%", status: "Not owned" },
-    { name: "Zero Point Sprite", base: "Zero Point", rarity: "mythic", chance: "0%", status: "Not owned" },
-    { name: "Cube Zero Point Sprite", base: "Cube Zero Point", rarity: "special", chance: "0.000014%", status: "Not owned" },
-    { name: "Gold Zero Point Sprite", base: "Gold Zero Point", rarity: "special", chance: "0.00014%", status: "Not owned" },
-    { name: "Quack Zero Point Sprite", base: "Quack Zero Point", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Gummy Zero Point Sprite", base: "Gummy Zero Point", rarity: "special", chance: "0.000085%", status: "Not owned" },
-    { name: "Galaxy Zero Point Sprite", base: "Galaxy Zero Point", rarity: "special", chance: "0.000056%", status: "Not owned" },
-    { name: "Holofoil Zero Point Sprite", base: "Holofoil Zero Point", rarity: "special", chance: "0.00028%", status: "Not owned" },
-    { name: "Fishy Sprite", base: "Fishy", rarity: "rare", chance: "0%", status: "Not owned" },
-    { name: "Cube Fishy Sprite", base: "Cube Fishy", rarity: "special", chance: "0.21%", status: "Not owned" },
-    { name: "Gold Fishy Sprite", base: "Gold Fishy", rarity: "special", chance: "0.64%", status: "Not owned" },
-    { name: "Gummy Fishy Sprite", base: "Gummy Fishy", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Galaxy Fishy Sprite", base: "Galaxy Fishy", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Striker Sprite", base: "Striker", rarity: "epic", chance: "5.25%", status: "Not owned" },
-    { name: "Gold Striker Sprite", base: "Gold Striker", rarity: "special", chance: "0.62%", status: "Not owned" },
-    { name: "Gummy Striker Sprite", base: "Gummy Striker", rarity: "special", chance: "0.37%", status: "Not owned" },
-    { name: "Galaxy Striker Sprite", base: "Galaxy Striker", rarity: "special", chance: "0.25%", status: "Not owned" },
-    { name: "Holofoil Striker Sprite", base: "Holofoil Striker", rarity: "special", chance: "1.23%", status: "Not owned" },
-    { name: "Aura Sprite", base: "Aura", rarity: "epic", chance: "6.48%", status: "Not owned" },
-    { name: "Gold Aura Sprite", base: "Gold Aura", rarity: "special", chance: "0.62%", status: "Not owned" },
-    { name: "Gummy Aura Sprite", base: "Gummy Aura", rarity: "special", chance: "0.37%", status: "Not owned" },
-    { name: "Galaxy Aura Sprite", base: "Galaxy Aura", rarity: "special", chance: "0.25%", status: "Not owned" },
-    { name: "Boss Sprite", base: "Boss", rarity: "legendary", chance: "4.45%", status: "Not owned" },
-    { name: "Cube Boss Sprite", base: "Cube Boss", rarity: "special", chance: "0.04%", status: "Not owned" },
-    { name: "Gold Boss Sprite", base: "Gold Boss", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Gummy Boss Sprite", base: "Gummy Boss", rarity: "special", chance: "0.26%", status: "Not owned" },
-    { name: "Galaxy Boss Sprite", base: "Galaxy Boss", rarity: "special", chance: "0.17%", status: "Not owned" },
-    { name: "Grim Sprite", base: "Grim", rarity: "mythic", chance: "0.15%", status: "Not owned" },
-    { name: "Cube Grim Sprite", base: "Cube Grim", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Gold Grim Sprite", base: "Gold Grim", rarity: "special", chance: "0.01%", status: "Not owned" },
-    { name: "Gummy Grim Sprite", base: "Gummy Grim", rarity: "special", chance: "0.01%", status: "Not owned" },
-    { name: "Galaxy Grim Sprite", base: "Galaxy Grim", rarity: "special", chance: "0.01%", status: "Not owned" },
-    { name: "Holofoil Grim Sprite", base: "Holofoil Grim", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Air Sprite", base: "Air", rarity: "rare", chance: "0%", status: "Not owned" },
-    { name: "Gold Air Sprite", base: "Gold Air", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Gummy Air Sprite", base: "Gummy Air", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Galaxy Air Sprite", base: "Galaxy Air", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Holofoil Air Sprite", base: "Holofoil Air", rarity: "special", chance: "0.53%", status: "Not owned" },
-    { name: "Seven Sprite", base: "Seven", rarity: "legendary", chance: "3.63%", status: "Not owned" },
-    { name: "Gold Seven Sprite", base: "Gold Seven", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Gummy Seven Sprite", base: "Gummy Seven", rarity: "special", chance: "0.26%", status: "Not owned" },
-    { name: "Galaxy Seven Sprite", base: "Galaxy Seven", rarity: "special", chance: "0.17%", status: "Not owned" },
-    { name: "Holofoil Seven Sprite", base: "Holofoil Seven", rarity: "special", chance: "0.85%", status: "Not owned" },
-    { name: "Pollo Sprite", base: "Pollo", rarity: "mythic", chance: "2.14%", status: "Not owned" },
-    { name: "Llama Sprite", base: "Llama", rarity: "legendary", chance: "4.45%", status: "Not owned" },
-    { name: "Gold Llama Sprite", base: "Gold Llama", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Gummy Llama Sprite", base: "Gummy Llama", rarity: "special", chance: "0.26%", status: "Not owned" },
-    { name: "Galaxy Llama Sprite", base: "Galaxy Llama", rarity: "special", chance: "0.17%", status: "Not owned" },
-    { name: "Gem Llama Sprite", base: "Gem Llama", rarity: "special", chance: "0%", status: "Not owned" },
-    { name: "Peely Sprite", base: "Peely", rarity: "legendary", chance: "4.62%", status: "Not owned" },
-    { name: "Gold Peely Sprite", base: "Gold Peely", rarity: "special", chance: "0.43%", status: "Not owned" },
-    { name: "Gummy Peely Sprite", base: "Gummy Peely", rarity: "special", chance: "0.26%", status: "Not owned" },
-    { name: "Galaxy Peely Sprite", base: "Galaxy Peely", rarity: "special", chance: "0.17%", status: "Not owned" }
+    { name: "John Wick Sprite", base: "John Wick", rarity: "mythic", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_Reload_FillerGrunt_icon_L.webp" },
+    { name: "Batman Sprite", base: "Batman", rarity: "mythic", chance: "1.44%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Default_L.webp" },
+    { name: "Cube Batman Sprite", base: "Cube Batman", rarity: "special", chance: "0.02%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Cube_L.webp" },
+    { name: "Gold Batman Sprite", base: "Gold Batman", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Gold_L.webp" },
+    { name: "Gummy Batman Sprite", base: "Gummy Batman", rarity: "special", chance: "0.1%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Candy_L.webp" },
+    { name: "Galaxy Batman Sprite", base: "Galaxy Batman", rarity: "special", chance: "0.07%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Galaxy_L.webp" },
+    { name: "Holofoil Batman Sprite", base: "Holofoil Batman", rarity: "special", chance: "0.34%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_FossilMeal_Holofoil_L.webp" },
+    { name: "Water Sprite", base: "Water", rarity: "rare", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Unvault_Ch7S3_ui_L.webp" },
+    { name: "Gold Water Sprite", base: "Gold Water", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Gold_ui_L.webp" },
+    { name: "Quack Water Sprite", base: "Quack Water", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Quack_ui_L.webp" },
+    { name: "Gummy Water Sprite", base: "Gummy Water", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Candy_ui_L.webp" },
+    { name: "Galaxy Water Sprite", base: "Galaxy Water", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Galaxy_ui_L.webp" },
+    { name: "Gem Water Sprite", base: "Gem Water", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Gem_ui_L.webp" },
+    { name: "Holofoil Water Sprite", base: "Holofoil Water", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Water_Holofoil_ui_L.webp" },
+    { name: "Earth Sprite", base: "Earth", rarity: "rare", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Ch7S3_UI_L.webp" },
+    { name: "Cube Earth Sprite", base: "Cube Earth", rarity: "special", chance: "0.21%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Cube_ui_L.webp" },
+    { name: "Gold Earth Sprite", base: "Gold Earth", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Gold_ui_L.webp" },
+    { name: "Quack Earth Sprite", base: "Quack Earth", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Quack_ui_L.webp" },
+    { name: "Gummy Earth Sprite", base: "Gummy Earth", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Candy_ui_L.webp" },
+    { name: "Galaxy Earth Sprite", base: "Galaxy Earth", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Galaxy_ui_L.webp" },
+    { name: "Gem Earth Sprite", base: "Gem Earth", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Earth_Gem_ui_L.webp" },
+    { name: "Fire Sprite", base: "Fire", rarity: "rare", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Unvault_Ch7S3_ui_L.webp" },
+    { name: "Cube Fire Sprite", base: "Cube Fire", rarity: "special", chance: "0.21%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Cube_ui_L.webp" },
+    { name: "Gold Fire Sprite", base: "Gold Fire", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Gold_ui_L.webp" },
+    { name: "Quack Fire Sprite", base: "Quack Fire", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Quack_ui_L.webp" },
+    { name: "Gummy Fire Sprite", base: "Gummy Fire", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Candy_ui_L.webp" },
+    { name: "Galaxy Fire Sprite", base: "Galaxy Fire", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Galaxy_ui_L.webp" },
+    { name: "Holofoil Fire Sprite", base: "Holofoil Fire", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fire_Holofoil_ui_L.webp" },
+    { name: "Duck Sprite", base: "Duck", rarity: "epic", chance: "6.48%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Duck_Default_L.webp" },
+    { name: "Gold Duck Sprite", base: "Gold Duck", rarity: "special", chance: "0.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Duck_Gold_L.webp" },
+    { name: "Gummy Duck Sprite", base: "Gummy Duck", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Duck_Candy_L.webp" },
+    { name: "Galaxy Duck Sprite", base: "Galaxy Duck", rarity: "special", chance: "0.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Duck_Galaxy_L.webp" },
+    { name: "Gem Duck Sprite", base: "Gem Duck", rarity: "special", chance: "0.1%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Duck_Gem_L.webp" },
+    { name: "Ghost Sprite", base: "Ghost", rarity: "epic", chance: "5.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Ghost_Unvault_L.webp" },
+    { name: "Gold Ghost Sprite", base: "Gold Ghost", rarity: "special", chance: "0.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Ghost_Gold_L.webp" },
+    { name: "Gummy Ghost Sprite", base: "Gummy Ghost", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Ghost_Candy_L.webp" },
+    { name: "Galaxy Ghost Sprite", base: "Galaxy Ghost", rarity: "special", chance: "0.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Ghost_Galaxy_L.webp" },
+    { name: "Holofoil Ghost Sprite", base: "Holofoil Ghost", rarity: "special", chance: "1.23%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Ghost_Holo_L.webp" },
+    { name: "Dream Sprite", base: "Dream", rarity: "legendary", chance: "4.45%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Sleepy_ui_L.webp" },
+    { name: "Cube Dream Sprite", base: "Cube Dream", rarity: "special", chance: "0.04%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Sleepy_Cube_ui_L.webp" },
+    { name: "Gold Dream Sprite", base: "Gold Dream", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Sleepy_Gold_ui_L.webp" },
+    { name: "Gummy Dream Sprite", base: "Gummy Dream", rarity: "special", chance: "0.26%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Sleepy_Candy_ui_L.webp" },
+    { name: "Galaxy Dream Sprite", base: "Galaxy Dream", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Sleepy_Galaxy_ui_L.webp" },
+    { name: "Demon Sprite", base: "Demon", rarity: "epic", chance: "6.48%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_RedDemon_Default_L.webp" },
+    { name: "Gold Demon Sprite", base: "Gold Demon", rarity: "special", chance: "0.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_RedDemon_Gold_L.webp" },
+    { name: "Gummy Demon Sprite", base: "Gummy Demon", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_RedDemon_Candy_L.webp" },
+    { name: "Galaxy Demon Sprite", base: "Galaxy Demon", rarity: "special", chance: "0.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_RedDemon_Galaxy_L.webp" },
+    { name: "Gem Demon Sprite", base: "Gem Demon", rarity: "special", chance: "0.1%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_RedDemon_Gem_L.webp" },
+    { name: "Punk Sprite", base: "Punk", rarity: "legendary", chance: "4.45%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Punk_ui_L.webp" },
+    { name: "Cube Punk Sprite", base: "Cube Punk", rarity: "special", chance: "0.04%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Punk_Cube_ui_L.webp" },
+    { name: "Gold Punk Sprite", base: "Gold Punk", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Punk_Gold_ui_L.webp" },
+    { name: "Gummy Punk Sprite", base: "Gummy Punk", rarity: "special", chance: "0.26%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Punk_Candy_ui_L.webp" },
+    { name: "Galaxy Punk Sprite", base: "Galaxy Punk", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Punk_Galaxy_ui_L.webp" },
+    { name: "Gem Punk Sprite", base: "Gem Punk", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Punk_Gem_ui_L.webp" },
+    { name: "King Sprite", base: "King", rarity: "epic", chance: "5.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_King_ui_L.webp" },
+    { name: "Gold King Sprite", base: "Gold King", rarity: "special", chance: "0.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_King_Gold_ui_L.webp" },
+    { name: "Gummy King Sprite", base: "Gummy King", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_King_Candy_ui_L.webp" },
+    { name: "Galaxy King Sprite", base: "Galaxy King", rarity: "special", chance: "0.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_King_Galaxy_ui_L.webp" },
+    { name: "Holofoil King Sprite", base: "Holofoil King", rarity: "special", chance: "1.23%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_King_Holofoil_ui_L.webp" },
+    { name: "Burnt Peanut", base: "Burnt Peanut", rarity: "mythic", chance: "2.14%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_BurntPeanut_ui_L.webp" },
+    { name: "Vini Jr. Sprite", base: "Vini Jr.", rarity: "mythic", chance: "2.14%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_CokeParmesan_Default_L.webp" },
+    { name: "Zero Point Sprite", base: "Zero Point", rarity: "mythic", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_ui_L.webp" },
+    { name: "Cube Zero Point Sprite", base: "Cube Zero Point", rarity: "special", chance: "0.000014%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Cube_ui_L.webp" },
+    { name: "Gold Zero Point Sprite", base: "Gold Zero Point", rarity: "special", chance: "0.00014%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Gold_ui_L.webp" },
+    { name: "Quack Zero Point Sprite", base: "Quack Zero Point", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Quack_ui_L.webp" },
+    { name: "Gummy Zero Point Sprite", base: "Gummy Zero Point", rarity: "special", chance: "0.000085%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Candy_ui_L.webp" },
+    { name: "Galaxy Zero Point Sprite", base: "Galaxy Zero Point", rarity: "special", chance: "0.000056%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Galaxy_ui_L.webp" },
+    { name: "Gem Zero Point Sprite", base: "Gem Zero Point", rarity: "special", chance: "0.00001%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Gem_ui_L.webp" },
+    { name: "Holofoil Zero Point Sprite", base: "Holofoil Zero Point", rarity: "special", chance: "0.00028%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_ZeroPoint_Holofoil_ui_L.webp" },
+    { name: "Fishy Sprite", base: "Fishy", rarity: "rare", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fishy_ui_L.webp" },
+    { name: "Cube Fishy Sprite", base: "Cube Fishy", rarity: "special", chance: "0.21%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fishy_Cube_L.webp" },
+    { name: "Gold Fishy Sprite", base: "Gold Fishy", rarity: "special", chance: "0.64%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fishy_Gold_ui_L.webp" },
+    { name: "Gummy Fishy Sprite", base: "Gummy Fishy", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fishy_Candy_ui_L.webp" },
+    { name: "Galaxy Fishy Sprite", base: "Galaxy Fishy", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Fishy_Galaxy_ui_L.webp" },
+    { name: "Striker Sprite", base: "Striker", rarity: "epic", chance: "5.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Soccer_ui_L.webp" },
+    { name: "Gold Striker Sprite", base: "Gold Striker", rarity: "special", chance: "0.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Soccer_Gold_L.webp" },
+    { name: "Gummy Striker Sprite", base: "Gummy Striker", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Soccer_Candy_L.webp" },
+    { name: "Galaxy Striker Sprite", base: "Galaxy Striker", rarity: "special", chance: "0.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Soccer_Galaxy_L.webp" },
+    { name: "Holofoil Striker Sprite", base: "Holofoil Striker", rarity: "special", chance: "1.23%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Soccer_Holofoil_L.webp" },
+    { name: "Aura Sprite", base: "Aura", rarity: "epic", chance: "6.48%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Drifter_ui_L.webp" },
+    { name: "Gold Aura Sprite", base: "Gold Aura", rarity: "special", chance: "0.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Drifter_Gold_ui_L.webp" },
+    { name: "Gummy Aura Sprite", base: "Gummy Aura", rarity: "special", chance: "0.37%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Drifter_Candy_ui_L.webp" },
+    { name: "Galaxy Aura Sprite", base: "Galaxy Aura", rarity: "special", chance: "0.25%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Drifter_Galaxy_ui_L.webp" },
+    { name: "Gem Aura Sprite", base: "Gem Aura", rarity: "special", chance: "0.08%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Drifter_Gem_ui_L.webp" },
+    { name: "Boss Sprite", base: "Boss", rarity: "legendary", chance: "4.45%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Boss_ui_L.webp" },
+    { name: "Cube Boss Sprite", base: "Cube Boss", rarity: "special", chance: "0.04%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Boss_Cube_ui_L.webp" },
+    { name: "Gold Boss Sprite", base: "Gold Boss", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Boss_Gold_ui_L.webp" },
+    { name: "Gummy Boss Sprite", base: "Gummy Boss", rarity: "special", chance: "0.26%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Boss_Candy_ui_L.webp" },
+    { name: "Galaxy Boss Sprite", base: "Galaxy Boss", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Boss_Galaxy_ui_L.webp" },
+    { name: "Grim Sprite", base: "Grim", rarity: "mythic", chance: "0.15%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Default_L.webp" },
+    { name: "Cube Grim Sprite", base: "Cube Grim", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Cube_L.webp" },
+    { name: "Gold Grim Sprite", base: "Gold Grim", rarity: "special", chance: "0.01%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Gold_L.webp" },
+    { name: "Gummy Grim Sprite", base: "Gummy Grim", rarity: "special", chance: "0.01%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Candy_L.webp" },
+    { name: "Galaxy Grim Sprite", base: "Galaxy Grim", rarity: "special", chance: "0.01%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Galaxy_L.webp" },
+    { name: "Gem Grim Sprite", base: "Gem Grim", rarity: "special", chance: "0.00099%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Gem_L.webp" },
+    { name: "Holofoil Grim Sprite", base: "Holofoil Grim", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_GrimReaper_Holofoil_L.webp" },
+    { name: "Air Sprite", base: "Air", rarity: "rare", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Air_Default_L.webp" },
+    { name: "Gold Air Sprite", base: "Gold Air", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Air_Gold_L.webp" },
+    { name: "Gummy Air Sprite", base: "Gummy Air", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Air_Candy_L.webp" },
+    { name: "Galaxy Air Sprite", base: "Galaxy Air", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Air_Galaxy_L.webp" },
+    { name: "Holofoil Air Sprite", base: "Holofoil Air", rarity: "special", chance: "0.53%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Air_Holo_L.webp" },
+    { name: "Seven Sprite", base: "Seven", rarity: "legendary", chance: "3.63%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Seven_ui_L.webp" },
+    { name: "Gold Seven Sprite", base: "Gold Seven", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Seven_Gold_ui_L.webp" },
+    { name: "Gummy Seven Sprite", base: "Gummy Seven", rarity: "special", chance: "0.26%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Seven_Candy_ui_L.webp" },
+    { name: "Galaxy Seven Sprite", base: "Galaxy Seven", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Seven_Galaxy_ui_L.webp" },
+    { name: "Holofoil Seven Sprite", base: "Holofoil Seven", rarity: "special", chance: "0.85%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Seven_Holofoil_ui_L.webp" },
+    { name: "Ironmouse Sprite", base: "Ironmouse", rarity: "mythic", chance: "2.14%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_PedicureAntacid_L.webp" },
+    { name: "Pollo Sprite", base: "Pollo", rarity: "mythic", chance: "2.14%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_CompanyStargazer_Default_L.webp" },
+    { name: "Llama Sprite", base: "Llama", rarity: "legendary", chance: "4.45%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Llama_ui_L.webp" },
+    { name: "Gold Llama Sprite", base: "Gold Llama", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Llama_Gold_ui_L.webp" },
+    { name: "Gummy Llama Sprite", base: "Gummy Llama", rarity: "special", chance: "0.26%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Llama_Candy_ui_L.webp" },
+    { name: "Galaxy Llama Sprite", base: "Galaxy Llama", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Llama_Galaxy_ui_L.webp" },
+    { name: "Gem Llama Sprite", base: "Gem Llama", rarity: "special", chance: "0%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Llama_Gem_ui_L.webp" },
+    { name: "Peely Sprite", base: "Peely", rarity: "legendary", chance: "4.62%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Peely_ui_L.webp" },
+    { name: "Gold Peely Sprite", base: "Gold Peely", rarity: "special", chance: "0.43%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Peely_Gold_ui_L.webp" },
+    { name: "Gummy Peely Sprite", base: "Gummy Peely", rarity: "special", chance: "0.26%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Peely_Candy_ui_L.webp" },
+    { name: "Galaxy Peely Sprite", base: "Galaxy Peely", rarity: "special", chance: "0.17%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Peely_Galaxy_ui_L.webp" },
+    { name: "Holofoil Peely Sprite", base: "Holofoil Peely", rarity: "special", chance: "0.85%", status: "Not owned", img: "https://fortnite.gg/img/x/sprites/icons/T_Icon_BR_Creature_Sprite_Peely_Holofoil_ui_L.webp" }
 ];
 
 // Price Calculation Algorithm
@@ -298,26 +306,6 @@ function calculatePrice(item) {
     return Math.round(basePrice * 100) / 100;
 }
 
-// Load saved custom images from localStorage
-let savedImages = {};
-try {
-    const local = localStorage.getItem('spritshop_custom_images');
-    if (local) savedImages = JSON.parse(local);
-} catch(e) {}
-
-// Extract pre-rendered img URLs from HTML on initial page load
-const htmlImageMap = {};
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('#products-grid .sprit-card').forEach(card => {
-        const titleEl = card.querySelector('h3');
-        const imgEl = card.querySelector('img');
-        if (titleEl && imgEl && imgEl.src) {
-            const name = titleEl.textContent.trim();
-            htmlImageMap[name] = imgEl.src;
-        }
-    });
-});
-
 const products = rawSpriteList.map((item, index) => {
     let variant = 'standard';
     if (item.name.includes('Gold')) variant = 'gold';
@@ -326,11 +314,9 @@ const products = rawSpriteList.map((item, index) => {
     else if (item.name.includes('Gummy')) variant = 'gummy';
     else if (item.name.includes('Cube')) variant = 'cube';
     else if (item.name.includes('Quack')) variant = 'quack';
+    else if (item.name.includes('Gem')) variant = 'gem';
 
     const calculatedPLN = calculatePrice(item);
-    
-    // Priority: 1. saved in localStorage, 2. pre-rendered in HTML, 3. null
-    const customImg = savedImages[item.name] || htmlImageMap[item.name] || null;
 
     return {
         id: index + 1,
@@ -341,7 +327,7 @@ const products = rawSpriteList.map((item, index) => {
         status: item.status,
         variant: variant,
         pricePLN: calculatedPLN,
-        imgUrl: customImg && customImg.trim().length > 0 ? customImg.trim() : null
+        imgUrl: item.img
     };
 });
 
@@ -370,8 +356,6 @@ const checkoutBtn = document.getElementById('checkout-btn');
 const itemModal = document.getElementById('item-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const modalImgContainer = document.getElementById('modal-img-container');
-const modalImgUrlInput = document.getElementById('modal-img-url-input');
-const saveImgUrlBtn = document.getElementById('save-img-url-btn');
 const modalBadge = document.getElementById('modal-badge');
 const modalTitle = document.getElementById('modal-title');
 const modalChance = document.getElementById('modal-chance');
@@ -392,76 +376,9 @@ const successModal = document.getElementById('success-modal');
 const closeSuccessBtn = document.getElementById('close-success-btn');
 const successOrderId = document.getElementById('success-order-id');
 
-// Dynamic SVG Avatar or Image Graphic Generator
+// Direct Image Graphic Generator
 function generateSpriteGraphic(product) {
-    const activeUrl = product.imgUrl || savedImages[product.name] || htmlImageMap[product.name];
-    if (activeUrl && activeUrl.trim() !== '') {
-        return `<img src="${activeUrl}" alt="${product.name}" class="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110">`;
-    }
-
-    let bgGradient = 'linear-gradient(135deg, #1e293b, #0f172a)';
-    let iconClass = 'fa-ghost';
-    let iconColor = '#94a3b8';
-
-    if (product.rarity === 'special') {
-        bgGradient = 'linear-gradient(135deg, #ec4899, #8b5cf6, #06b6d4)';
-        iconColor = '#ffffff';
-    } else if (product.rarity === 'mythic') {
-        bgGradient = 'linear-gradient(135deg, #991b1b, #ef4444)';
-        iconColor = '#fecaca';
-    } else if (product.rarity === 'legendary') {
-        bgGradient = 'linear-gradient(135deg, #b45309, #f59e0b)';
-        iconColor = '#fef08a';
-    } else if (product.rarity === 'epic') {
-        bgGradient = 'linear-gradient(135deg, #6b21a8, #a855f7)';
-        iconColor = '#e9d5ff';
-    } else if (product.rarity === 'rare') {
-        bgGradient = 'linear-gradient(135deg, #1d4ed8, #3b82f6)';
-        iconColor = '#bfdbfe';
-    }
-
-    if (product.variant === 'gold') { iconClass = 'fa-wand-magic-sparkles'; iconColor = '#fbbf24'; }
-    else if (product.variant === 'galaxy') { iconClass = 'fa-meteor'; iconColor = '#c084fc'; }
-    else if (product.variant === 'holofoil') { iconClass = 'fa-dharmachakra'; iconColor = '#38bdf8'; }
-    else if (product.variant === 'gummy') { iconClass = 'fa-candy-cane'; iconColor = '#f472b6'; }
-    else if (product.variant === 'cube') { iconClass = 'fa-cube'; iconColor = '#a855f7'; }
-    else if (product.variant === 'quack') { iconClass = 'fa-crow'; iconColor = '#facc15'; }
-
-    if (product.name.includes('Batman')) iconClass = 'fa-mask';
-    else if (product.name.includes('Fire')) iconClass = 'fa-fire';
-    else if (product.name.includes('Water')) iconClass = 'fa-droplet';
-    else if (product.name.includes('Earth')) iconClass = 'fa-earth-americas';
-    else if (product.name.includes('Duck')) iconClass = 'fa-dove';
-    else if (product.name.includes('King')) iconClass = 'fa-crown';
-    else if (product.name.includes('Demon')) iconClass = 'fa-spaghetti-monster-flying';
-    else if (product.name.includes('Llama')) iconClass = 'fa-horse';
-    else if (product.name.includes('Peely')) iconClass = 'fa-lemon';
-
-    return `
-        <div class="w-full h-full flex flex-col items-center justify-center relative overflow-hidden" style="background: ${bgGradient}">
-            <div class="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
-            <i class="fa-solid ${iconClass} text-5xl z-10 transform hover:scale-125 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]" style="color: ${iconColor}"></i>
-            <span class="text-[9px] font-black uppercase text-white/80 tracking-widest z-10 mt-2">${product.variant.toUpperCase()}</span>
-        </div>
-    `;
-}
-
-// Save Custom Image URL for selected product
-if (saveImgUrlBtn) {
-    saveImgUrlBtn.addEventListener('click', () => {
-        if (!selectedProductModal) return;
-        const url = modalImgUrlInput.value.trim();
-        selectedProductModal.imgUrl = url.length > 0 ? url : null;
-        
-        savedImages[selectedProductModal.name] = selectedProductModal.imgUrl;
-        try {
-            localStorage.setItem('spritshop_custom_images', JSON.stringify(savedImages));
-        } catch(e) {}
-
-        modalImgContainer.innerHTML = generateSpriteGraphic(selectedProductModal);
-        filterProducts();
-        showToast(currentLang === 'pl' ? `Zapisano obrazek dla "${selectedProductModal.name}"!` : `Image saved for "${selectedProductModal.name}"!`);
-    });
+    return `<img src="${product.imgUrl}" alt="${product.name}" class="w-full h-full object-cover rounded-xl transition-transform duration-500 hover:scale-110" onerror="this.onerror=null; this.src='https://fortnite.gg/img/icon.jpg'">`;
 }
 
 // Render Products Grid
@@ -589,11 +506,10 @@ document.querySelectorAll('.rarity-filter').forEach(btn => {
     });
 });
 
-// Modal Preview & Image Editor
+// Modal Preview
 function openModal(product) {
     selectedProductModal = product;
     if (modalImgContainer) modalImgContainer.innerHTML = generateSpriteGraphic(product);
-    if (modalImgUrlInput) modalImgUrlInput.value = product.imgUrl || savedImages[product.name] || htmlImageMap[product.name] || '';
     if (modalTitle) modalTitle.textContent = product.name;
     if (modalChance) modalChance.textContent = product.chance;
     const statusText = product.status === 'Owned' ? translations[currentLang].owned : translations[currentLang].notOwned;
@@ -844,42 +760,13 @@ if (canvas) {
     animate();
 }
 
-// Init Language & Bind Existing DOM Cards
-document.addEventListener('DOMContentLoaded', () => {
-    // Collect any <img> links present in the rendered HTML cards
-    document.querySelectorAll('#products-grid .sprit-card').forEach(card => {
-        const titleEl = card.querySelector('h3');
-        const imgEl = card.querySelector('img');
-        if (titleEl && imgEl && imgEl.src) {
-            const name = titleEl.textContent.trim();
-            htmlImageMap[name] = imgEl.src;
-            const p = products.find(prod => prod.name === name);
-            if (p) p.imgUrl = imgEl.src;
-        }
+// Init Language & Start Store
+const langBtn = document.getElementById('lang-toggle-btn');
+if (langBtn) {
+    langBtn.addEventListener('click', () => {
+        const nextLang = currentLang === 'pl' ? 'en' : 'pl';
+        setLanguage(nextLang);
     });
-
-    const langBtn = document.getElementById('lang-toggle-btn');
-    if (langBtn) {
-        langBtn.addEventListener('click', () => {
-            const nextLang = currentLang === 'pl' ? 'en' : 'pl';
-            setLanguage(nextLang);
-        });
-    }
-
-    setLanguage('pl');
-});
-
-// Run immediate fallback setup if DOM is already loaded
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    document.querySelectorAll('#products-grid .sprit-card').forEach(card => {
-        const titleEl = card.querySelector('h3');
-        const imgEl = card.querySelector('img');
-        if (titleEl && imgEl && imgEl.src) {
-            const name = titleEl.textContent.trim();
-            htmlImageMap[name] = imgEl.src;
-            const p = products.find(prod => prod.name === name);
-            if (p) p.imgUrl = imgEl.src;
-        }
-    });
-    setLanguage('pl');
 }
+
+setLanguage('pl');
