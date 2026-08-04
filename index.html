@@ -52,10 +52,17 @@
                 </div>
             </div>
 
-            <!-- Language Switcher & Cart -->
+            <!-- User Auth, Language Switcher & Cart -->
             <div class="flex items-center gap-2 sm:gap-3">
+                
+                <!-- Auth / Dashboard Button -->
+                <button id="auth-btn" class="flex items-center gap-2 bg-slate-900/90 border border-cyan-500/40 hover:border-cyan-400 px-3.5 py-2 rounded-2xl text-xs font-black transition-all shadow-md text-cyan-300">
+                    <i class="fa-solid fa-user-gear text-sm"></i>
+                    <span id="auth-btn-label">ZALOGUJ</span>
+                </button>
+
                 <!-- Language Toggle Button (PL / EN) -->
-                <button id="lang-toggle-btn" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700 hover:border-cyan-400 px-3.5 py-2 rounded-2xl text-xs font-black transition-all shadow-md">
+                <button id="lang-toggle-btn" class="flex items-center gap-1.5 bg-slate-900/90 border border-slate-700 hover:border-cyan-400 px-3 py-2 rounded-2xl text-xs font-black transition-all shadow-md">
                     <span id="current-lang-flag" class="text-sm">🇵🇱</span>
                     <span id="current-lang-code" class="text-cyan-400 font-extrabold">PL</span>
                 </button>
@@ -82,9 +89,19 @@
                 <h1 class="text-3xl sm:text-5xl font-black uppercase font-heading tracking-wide leading-tight text-white mb-4">
                     <span data-i18n="heroTitlePart1">WYBIERZ</span> <span class="bg-gradient-to-r from-cyan-400 via-indigo-200 to-fuchsia-400 bg-clip-text text-transparent" data-i18n="heroTitlePart2">EKSKLUZYWNE DUSZKI</span>
                 </h1>
-                <p class="text-slate-300 text-xs sm:text-base leading-relaxed mb-6" data-i18n="heroDesc">
-                    Wszystkie 109 Duszków z oficjalnymi ikonicznymi grafikami i dokładną szansą na drop!
+                <p class="text-slate-300 text-xs sm:text-base leading-relaxed mb-4" data-i18n="heroDesc">
+                    Wszystkie 109 Duszków z oficjalnymi grafikami i dokładną szansą na drop!
                 </p>
+
+                <!-- Global Trade Rule Highlight Banner -->
+                <div class="bg-cyan-950/60 border border-cyan-500/40 rounded-2xl p-3.5 text-xs text-cyan-200 flex items-start gap-3 shadow-inner mb-6 text-left">
+                    <i class="fa-solid fa-handshake-angle text-cyan-400 text-lg mt-0.5 flex-shrink-0"></i>
+                    <div>
+                        <strong class="text-white block uppercase tracking-wider font-extrabold mb-0.5">Jak działa przekazanie Duszka w gra Fortnite?</strong>
+                        Po zakupie otrzymujesz Nick Bota. Dodajesz go do znajomych, wchodzicie do gry, bot przekazuje Duszka, zwracasz go, a w lobby Fortnite wykupujesz go za pyłek!
+                    </div>
+                </div>
+
                 <div class="flex flex-wrap items-center justify-center md:justify-start gap-4">
                     <a href="#items-section" class="sprit-btn px-8 py-3.5 text-xs sm:text-sm rounded-2xl font-black">
                         <i class="fa-solid fa-store mr-2"></i> <span data-i18n="browseBtn">PRZEGLĄDAJ KATALOG (109)</span>
@@ -179,7 +196,7 @@
                 </div>
                 <div class="flex justify-between text-slate-400">
                     <span data-i18n="deliveryMethod">Metoda dostawy:</span>
-                    <span class="text-emerald-400 font-bold" data-i18n="instantDelivery">Natychmiastowa Cyfrowa</span>
+                    <span class="text-emerald-400 font-bold" data-i18n="instantDelivery">Wymiana w Fortnite (BTT Bot)</span>
                 </div>
             </div>
 
@@ -215,6 +232,12 @@
                     <span class="text-slate-400 block" data-i18n="ownershipStatus">Status Posiadania:</span>
                     <span id="modal-status" class="font-extrabold text-slate-300">Not owned</span>
                 </div>
+            </div>
+
+            <!-- Trade Info Box -->
+            <div class="bg-cyan-950/60 border border-cyan-500/30 rounded-2xl p-3 text-[11px] text-cyan-200 text-left mb-4 shadow-inner">
+                <i class="fa-solid fa-circle-info text-cyan-400 mr-1"></i>
+                Po zakupie w panelu otrzymasz nick znajomego w Fortnite. Bot przekazuje duszka, oddajesz go i w lobby wykupujesz go za pyłek!
             </div>
 
             <div class="flex items-center justify-center gap-3 py-2">
@@ -254,6 +277,12 @@
                     <span class="text-slate-300 uppercase" data-i18n="totalAmount">ŁĄCZNA KWOTA:</span>
                     <span id="checkout-final-price" class="text-cyan-400 text-xl font-black">0.00 PLN</span>
                 </div>
+            </div>
+
+            <!-- Trade Note inside Checkout -->
+            <div class="bg-amber-950/40 border border-amber-500/40 rounded-2xl p-3.5 mb-6 text-xs text-amber-200 text-left">
+                <strong class="text-amber-400 block font-bold mb-1">⚡ Instrukcja Odbioru w Fortnite:</strong>
+                Po opłaceniu zamówienia w zakładce <strong>Dashboard (Moje Zamówienia)</strong> otrzymasz nick konta Epic. Dodajesz je w gry, dostajesz duszka w meczu, zwracasz go botowi, a następnie w lobby Fortnite wykupujesz go za pyłek.
             </div>
 
             <!-- Payment Method Selection -->
@@ -323,14 +352,109 @@
                 ✓
             </div>
             <h3 class="text-2xl font-black uppercase text-white font-heading" data-i18n="successTitle">PŁATNOŚĆ PRZYJĘTA!</h3>
-            <p class="text-xs text-slate-300 mt-2 mb-6" data-i18n="successDesc">Twoje duszki zostały natychmiastowo dodane do Twojego konta SpritShop.</p>
-            <div class="bg-slate-900 p-4 rounded-2xl text-xs text-left space-y-1 mb-6 border border-slate-800 font-mono">
+            <p class="text-xs text-slate-300 mt-2 mb-4" data-i18n="successDesc">Twoje duszki są gotowe do przekazania w grze Fortnite.</p>
+            
+            <div class="bg-slate-900 p-4 rounded-2xl text-xs text-left space-y-2 mb-6 border border-slate-800 font-mono">
                 <div class="text-slate-400"><span data-i18n="orderIdLabel">ID Zamówienia:</span> <span class="text-cyan-400" id="success-order-id">#SPRIT-88491</span></div>
                 <div class="text-slate-400"><span data-i18n="statusLabel">Status:</span> <span class="text-emerald-400" data-i18n="statusCompleted">ZREALIZOWANO</span></div>
+                <div class="text-slate-300 pt-2 border-t border-slate-800">
+                    <span class="text-amber-400 font-bold block mb-1">📌 NICK BOTAw FORTNITE:</span>
+                    <div class="flex items-center justify-between bg-slate-950 p-2 rounded-xl border border-amber-500/40">
+                        <strong id="success-bot-nick" class="text-white text-sm font-sans">SpritVault_Bot99</strong>
+                        <button id="copy-bot-nick-btn" class="bg-amber-500 text-slate-950 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase">Kopiuj</button>
+                    </div>
+                </div>
             </div>
-            <button id="close-success-btn" class="sprit-btn w-full py-3.5 text-xs font-black rounded-xl uppercase" data-i18n="backToShop">
-                WRÓĆ DO SKLEPU
-            </button>
+
+            <div class="flex gap-3">
+                <button id="open-dashboard-after-success" class="bg-slate-900 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 w-1/2 py-3 text-xs font-black rounded-xl uppercase">
+                    DASHBOARD
+                </button>
+                <button id="close-success-btn" class="sprit-btn w-1/2 py-3 text-xs font-black rounded-xl uppercase" data-i18n="backToShop">
+                    SKLEP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= 9. USER AUTH MODAL (LOGIN / REGISTER) ================= -->
+    <div id="auth-modal" class="modal-view closed fixed inset-0 z-50 bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-slate-950 border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 relative shadow-2xl">
+            <button id="close-auth-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-900 text-slate-400 hover:text-white flex items-center justify-center text-base">✕</button>
+
+            <!-- Auth Tabs -->
+            <div class="flex border-b border-slate-800 mb-6">
+                <button id="tab-login-btn" class="auth-tab-btn active w-1/2 pb-3 text-sm font-black uppercase text-center">LOGOWANIE</button>
+                <button id="tab-register-btn" class="auth-tab-btn w-1/2 pb-3 text-sm font-black uppercase text-center">REJESTRACJA</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1">Adres E-mail / Nick</label>
+                    <input type="text" id="login-input-user" required placeholder="np. gracik123" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1">Hasło</label>
+                    <input type="password" id="login-input-pass" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <button type="submit" class="sprit-btn w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs">
+                    ZALOGUJ SIĘ
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="space-y-4 text-xs hidden">
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1">Twój Nick w Fortnite</label>
+                    <input type="text" id="reg-input-fn" required placeholder="np. PlayerOne_FN" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1">Adres E-mail</label>
+                    <input type="email" id="reg-input-email" required placeholder="gracz@sklep.pl" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <div>
+                    <label class="block text-slate-300 font-bold mb-1">Stwórz Hasło</label>
+                    <input type="password" id="reg-input-pass" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-400">
+                </div>
+                <button type="submit" class="sprit-btn w-full py-3.5 rounded-xl font-black uppercase tracking-wider text-xs">
+                    UTWÓRZ KONTO SPRITSHOP
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= 10. USER ORDERS DASHBOARD MODAL ================= -->
+    <div id="dashboard-modal" class="modal-view closed fixed inset-0 z-50 bg-black/90 backdrop-blur-2xl flex items-center justify-center p-4">
+        <div class="max-w-3xl w-full bg-slate-950 border-2 border-cyan-500/40 rounded-3xl p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button id="close-dash-btn" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-900 border border-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-lg">✕</button>
+
+            <!-- Dashboard Header -->
+            <div class="flex items-center justify-between border-b border-slate-800 pb-5 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 text-2xl font-black">
+                        👤
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black uppercase font-heading text-white" id="dash-user-name">PANEL GRACZA</h2>
+                        <p class="text-xs text-slate-400" id="dash-user-email">Zalogowany profil SpritShop</p>
+                    </div>
+                </div>
+                <button id="logout-btn" class="bg-red-950/60 border border-red-500/40 text-red-300 hover:bg-red-900/80 px-4 py-2 rounded-xl text-xs font-bold transition">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Wyloguj
+                </button>
+            </div>
+
+            <!-- Orders Section -->
+            <div>
+                <h3 class="text-sm font-black uppercase tracking-wider text-cyan-400 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i> MOJE ZAMÓWIENIA I BOTY FORTNITE
+                </h3>
+
+                <div id="dash-orders-list" class="space-y-4">
+                    <!-- Dynamic Orders Cards -->
+                </div>
+            </div>
         </div>
     </div>
 
